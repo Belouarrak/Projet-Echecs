@@ -1,7 +1,7 @@
 public class Pion{
   private String position;
 
-  public Pion(String post){
-	this.position = post;
+  public Pion(String posit){
+	this.position = posit;
     }
 }
