@@ -18,4 +18,12 @@ public class Dame extends Piece{
     }
     return false;
   }
+  public String toString(){
+    if(this.color==0){
+      return "U+2655";
+    }
+    else{
+      return "U+265B";
+    }
+  }
 }
