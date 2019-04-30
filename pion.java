@@ -18,4 +18,12 @@ public class Pion extends Piece{
     }
     return false;
   }
+  public String toString(){
+    if(this.color==0){
+      return "U+2659";
+    }
+    else{
+      return "U+265F";
+    }
+  }
 }
