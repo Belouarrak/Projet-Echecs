@@ -22,7 +22,7 @@ public class Tour extends Piece{
     if(this.color==0){
       return "U+2656";
     }
-    else{
+    else {
       return "U+265C";
     }
   }
