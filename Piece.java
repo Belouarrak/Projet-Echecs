@@ -6,6 +6,6 @@ public abstract class Piece{
   public Piece(int color){
    this.couleur = color;
   }
-  public abstract void mouvementPossible(int caseDepartx, int caseDeparty, int caseArriveex, int caseArriveey);
+  public abstract boolean mouvementPossible(int departX, int departY, int arriveeX, int arriveeY);
   public abstract String toString();
 }
