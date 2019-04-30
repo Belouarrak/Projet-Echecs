@@ -1,7 +1,5 @@
-public class Pion{
-  private String position;
+import java.util.*;
 
-  public Pion(String posit){
-	this.position = posit;
-    }
+public class Pion extends Piece{
+  
 }
