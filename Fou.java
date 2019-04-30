@@ -17,4 +17,12 @@ public class Fou extends Piece{
       return true;
     }
   }
+  public String toString(){
+    if(this.color==0){
+      return "U+2657";
+    }
+    else{
+      return "U+265D";
+    }
+  }
 }
