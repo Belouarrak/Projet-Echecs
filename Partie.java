@@ -7,33 +7,33 @@ public class Partie{
 
   public void setCouleurBlanche(Joueur joueur) {
         this.blanc = joueur;
-    }
+  }
 
-    public void setCouleurNoire(Joueur joueur) {
+  public void setCouleurNoire(Joueur joueur) {
         this.noir = joueur;
-    }
+  }
 
-    public Echiquier getEchiquier() {
+  public Echiquier getEchiquier() {
         return this.echiquier;
-    }
+  }
 
-    public void setEchiquier(Echiquier echiquier) {
+  public void setEchiquier(Echiquier echiquier) {
         this.echiquier = echiquier;
-    }
+  }
 
-    public Joueur getBlanc() {
+  public Joueur getBlanc() {
         return this.blanc;
-    }
+  }
 
-    public void setBlanc(Joueur joueur) {
+  public void setBlanc(Joueur joueur) {
         this.blanc = joueur;
-    }
+  }
 
-    public Joueur getNoir() {
+  public Joueur getNoir() {
         return this.noir;
-    }
+  }
 
-    public void setJoueurNoir(Joueur joueur) {
+  public void setJoueurNoir(Joueur joueur) {
         this.noir = joueur;
-    }
+  }
 }
