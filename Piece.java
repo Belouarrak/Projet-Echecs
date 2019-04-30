@@ -1,4 +1,5 @@
 import java.util.*;
+import java.lang.*;
 
 public abstract class Piece{
   private int couleur;
