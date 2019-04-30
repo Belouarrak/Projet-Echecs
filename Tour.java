@@ -18,4 +18,12 @@ public class Tour extends Piece{
     }
     return false;
   }
+  public String toString(){
+    if(this.color==0){
+      return "U+2656";
+    }
+    else{
+      return "U+265C";
+    }
+  }
 }
