@@ -11,7 +11,7 @@ public class Case {
     this.piece = null;
   }
   public void occuperCase(Piece unepiece){
-    if(this.piece!=null){
+    if(this.piece==null){
       this.piece = unepiece;
     }
   }
@@ -26,6 +26,9 @@ public class Case {
     return enlevee;
   }
   public String toString(){
-    return this.piece.toString());
+    if(this.piece==null){
+      return("XXXXXX");
+    }
+    return this.piece.toString();
   }
 }

@@ -19,7 +19,7 @@ public class Cavalier extends Piece{
     return false;
   }
   public String toString(){
-   if(this.color==0){
+   if(this.couleur==0){
      return "U+2658";
    }
    else{

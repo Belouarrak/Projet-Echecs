@@ -16,9 +16,10 @@ public class Fou extends Piece{
     if(Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY)){
       return true;
     }
+    return false;
   }
   public String toString(){
-    if(this.color==0){
+    if(this.couleur==0){
       return "U+2657";
     }
     else{

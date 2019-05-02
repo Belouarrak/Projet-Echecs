@@ -2,7 +2,7 @@ import java.util.*;
 import java.lang.*;
 
 public abstract class Piece{
-  private int couleur;
+  protected int couleur;
 
   public Piece(int color){
    this.couleur = color;
