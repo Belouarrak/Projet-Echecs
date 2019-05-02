@@ -99,6 +99,6 @@ public class Partie{
     Roi kingblack = new Roi(1);
     this.noir.addPiece(kingblack);
     this.echiquier.getCase(7,4).occuperCase(kingblack);
-    System.out.println("Reste des pieces fait. ");
+    input.close();
   }
 }
