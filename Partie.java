@@ -54,6 +54,7 @@ public class Partie{
     this.setEchiquier(new Echiquier());
     this.setJoueurBlanc(new Joueur(nameblanc,true));
     this.setJoueurNoir(new Joueur(namenoir,false));
+    //Création des Pions
     for(int j=0; j<8; j++){
       Pion pawnwhite = new Pion(0);
       Pion pawnblack = new Pion(1);
