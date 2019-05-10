@@ -10,6 +10,15 @@ public class Case {
     this.positiony = y;
     this.piece = null;
   }
+  public int getX(){
+    return this.positionx;
+  }
+  public int getY(){
+    return this.positiony;
+  }
+  public Piece getPiece(){
+    return this.piece;
+  }
   public void occuperCase(Piece unepiece){
     if(this.piece==null){
       this.piece = unepiece;

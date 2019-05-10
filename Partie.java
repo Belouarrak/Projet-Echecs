@@ -24,6 +24,23 @@ public class Partie{
   public void setJoueurNoir(Joueur joueur) {
         this.noir = joueur;
       }
+  public void bougerPion(Case caseDep, Case caseAr){
+      caseAr.occuperCase(caseDep.enleverPiece()); //enlève la pièce de la case de départ et la pose sur la case d'arrivée
+  }
+  public Case convertirCoords(String coords){
+    int y = Character.getNumericValue(coords.charAt(0));
+    int x = Character.getNumericValue(coords.charAt(1));
+    return this.echiquier.getCase(x,y);
+  }
+  public boolean move(){
+    System.out.println("Effectuer un mouvement: ")
+    Case caseDep;
+    Case caseAr;
+    while(!this.echiquier.legalMove(caseDep, caseAr)){
+      caseDep = this.entrerCaseDepart();
+      caseAr = this.entrerCaseArrivee();
+    }
+  }
   public void initialiserPartie(){
     Scanner input = new Scanner(System.in);
     System.out.println("Veuillez entrer le nom des joueurs: \nJoueur blanc: ");
