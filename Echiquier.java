@@ -14,19 +14,18 @@ public class Echiquier{
   public Case getCase(int x, int y){
     return this.plateau[x][y];
   }
+  //nouvelle méthode legalMove, retorune true
   public boolean legalMove(Case caseDep, Case caseAr){
     //doit retourner false si la case de départ est vide
     if (!caseDep.estOccupee()){
       return false;
     }
-    //return true si le move de base est possible pour le type de pièce et si il n'y a pas de pièce(s) entre les deux pièces sur le chemin
-    if (caseDep.getPiece().mouvementPossible(caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY()) && this.rienEntreLesDeux(caseDep, caseAr)){
+    /*return true si la pièce peut effectuer le mouvement selon les règles du jeu
+    (la case fait partie du chemin et il n'ya pas d'autre pièce dessus qui la sépare de la case de départ)*/
+    if (caseDep.getPiece().mouvementPossible(caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY()){
       return true;
     }
     return false;
-  }
-  public boolean rienEntreLesDeux(Case caseDep, Case caseAr){
-    
   }
   public String toString(){
     String str = new String("");

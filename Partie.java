@@ -5,7 +5,10 @@ public class Partie{
   private Joueur blanc;
   private Joueur noir;
 
-  public Partie(){};
+  public Partie(){
+    this.initialiserPartie();
+    System.out.println(this.getEchiquier().toString());
+  };
   public Echiquier getEchiquier() {
         return this.echiquier;
       }
@@ -27,8 +30,9 @@ public class Partie{
   public void bougerPion(Case caseDep, Case caseAr){
       caseAr.occuperCase(caseDep.enleverPiece()); //enlève la pièce de la case de départ et la pose sur la case d'arrivée
   }
-  public Case convertirCoords(String coords){
-    int y = Character.getNumericValue(coords.charAt(0));
+  //Des futures méthodes qui ne sont pas encore finies
+  /*public Case convertirCoords(String coords){
+    String ystring = coords.charAt(0);
     int x = Character.getNumericValue(coords.charAt(1));
     return this.echiquier.getCase(x,y);
   }
@@ -40,7 +44,7 @@ public class Partie{
       caseDep = this.entrerCaseDepart();
       caseAr = this.entrerCaseArrivee();
     }
-  }
+  }*/
   public void initialiserPartie(){
     Scanner input = new Scanner(System.in);
     System.out.println("Veuillez entrer le nom des joueurs: \nJoueur blanc: ");
