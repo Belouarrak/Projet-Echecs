@@ -5,7 +5,10 @@ public class Partie{
   private Joueur blanc;
   private Joueur noir;
 
-  public Partie(){};
+  public Partie(){
+    this.initialiserPartie();
+    System.out.println(this.getEchiquier().toString());
+  };
   public Echiquier getEchiquier() {
         return this.echiquier;
       }
