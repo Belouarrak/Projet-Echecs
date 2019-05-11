@@ -20,7 +20,7 @@ public class Pion extends Piece{
         return true;
       }
       //true si la case est celle sur la diagonale supérieure (droite ou gauche) de la case de départ et celle-ci est occupée
-      if((arrivee==departX+1 && Math.abs(arriveeY-departY)==1) && board.getCase(arriveeX, arriveeY).estOccupee()){
+      if((arriveeX==departX+1 && Math.abs(arriveeY-departY)==1) && board.getCase(arriveeX, arriveeY).estOccupee()){
         return true;
       }
     }
@@ -37,7 +37,7 @@ public class Pion extends Piece{
         return true;
       }
       //true si la case est celle sur la diagonale supérieure (droite ou gauche) de la case de départ et celle-ci est occupée
-      if((arrivee==departX-1 && Math.abs(arriveeY-departY)==1) && board.getCase(arriveeX, arriveeY).estOccupee()){
+      if((arriveeX==departX-1 && Math.abs(arriveeY-departY)==1) && board.getCase(arriveeX, arriveeY).estOccupee()){
         return true;
       }
     }
