@@ -6,6 +6,9 @@ public class Pion extends Piece{
   public Pion(int color){
     super(color);
   }
+  public int getColor(){
+    return this.couleur;
+  }
   public boolean mouvementPossible(Case[][] board, int departX, int departY, int arriveeX, int arriveeY){
     //PION BLANC
     if (this.color==0) {

@@ -6,6 +6,9 @@ public class Fou extends Piece{
   public Fou(int color){
     super(color);
   }
+  public int getColor(){
+    return this.couleur;
+  }
   public boolean mouvementPossible(Case[][] board, int departX, int departY, int arriveeX, int arriveeY){
     if(Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY)){
       //diagonale haute-droite

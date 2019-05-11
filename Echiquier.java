@@ -19,19 +19,24 @@ public class Echiquier{
   public int getNumTour(){
     return this.numTour;
   }
-  //nouvelle méthode legalMove, retorune true
-  /*public boolean legalMove(Case caseDep, Case caseAr){
+  public boolean legalMove(Case caseDep, Case caseAr){
     //doit retourner false si la case de départ est vide
     if (!caseDep.estOccupee()){
       return false;
     }
+    //doit retoruner false si la case d'arrivée est occupée par une pièce du même joueur
+    if(caseAr.estOccupee()){
+      if(caseDep.getPiece().getColor()==caseAr.getPiece().getColor()){
+        return false;
+      }
+    }
     //return true si la pièce peut effectuer le mouvement selon les règles du jeu
-    //(la case fait partie du chemin et il n'ya pas d'autre pièce dessus qui la sépare de la case de départ)
+    //(la case fait partie du chemin et il n'y a pas d'autre pièce dessus qui la sépare de la case de départ)
     if (caseDep.getPiece().mouvementPossible(caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY())){
       return true;
     }
     return false;
-  }*/
+  }
   public String toString(){
     String str = new String("");
     str+="  +--X---+------+------+------+------+------+------+---X--+\n";

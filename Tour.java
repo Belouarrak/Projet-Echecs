@@ -6,6 +6,9 @@ public class Tour extends Piece{
   public Tour(int color){
     super(color);
   }
+  public int getColor(){
+    return this.couleur;
+  }
   public boolean mouvementPossible(Case[][] board, int departX, int departY, int arriveeX, int arriveeY){
     //departX=arriveeX: même ligne; departY=arriveeY: même colonne
     if(departX==arriveeX || departY==arriveeY){

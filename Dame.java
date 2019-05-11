@@ -6,6 +6,9 @@ public class Dame extends Piece{
   public Dame(int color){
     super(color);
   }
+  public int getColor(){
+    return this.couleur;
+  }
   public boolean mouvementPossible(Case[][] board, int departX, int departY, int arriveeX, int arriveeY){
     //pièce sur les diagoales ou même ligne ou même colonne
     if((Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY)) || (departX==arriveeX || departY==arriveeY)){
