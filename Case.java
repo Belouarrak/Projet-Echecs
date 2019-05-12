@@ -19,10 +19,17 @@ public class Case {
   public Piece getPiece(){
     return this.piece;
   }
-  public void occuperCase(Piece unepiece){
-    if(this.piece==null){
-      this.piece = unepiece;
-    }
+  public String getStringCase(){
+    String[] abc = {"a","b","c","d","e","f","g","h"};
+    String y = new String(abc[this.positiony]);
+    String x = new String(Integer.toString(positionx+1));
+    String str = y+x;
+    return str;
+  }
+  public Piece occuperCase(Piece unepiece){
+    Piece pieceEnlevee = this.piece;
+    this.piece = unepiece;
+    return pieceEnlevee;
   }
   public boolean estOccupee() {
     if(piece != null){

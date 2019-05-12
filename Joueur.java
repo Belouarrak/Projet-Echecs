@@ -25,4 +25,7 @@ public class Joueur{
   public void addPiece(Piece pawn){
     this.pieces.add(pawn);
   }
+  public ArrayList<Piece> getPiecesJoueur(){
+    return this.pieces;
+  }
 }

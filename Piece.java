@@ -8,6 +8,6 @@ public abstract class Piece{
    this.couleur = color;
   }
   public abstract int getColor();
-  public abstract boolean mouvementPossible(Case[][] board, int departX, int departY, int arriveeX, int arriveeY);
+  public abstract boolean mouvementPossible(Echiquier board, int departX, int departY, int arriveeX, int arriveeY);
   public abstract String toString();
 }
