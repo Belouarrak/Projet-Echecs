@@ -44,8 +44,7 @@ public class Echiquier{
       //doit retoruner false si la case d'arrivée est occupée par une pièce du même joueur
       if(caseAr.estOccupee()){
         if(caseDep.getPiece().getColor()==caseAr.getPiece().getColor()){
-          System.out.println("La case "+caseAr.getStringCase()+" est de la même couleur.");
-          System.out.println("Veuillez effectuer un mouvement valide. ");
+          System.out.println("La case "+caseAr.getStringCase()+" contient une pièce de la même couleur.");
           return false;
         }
       }
