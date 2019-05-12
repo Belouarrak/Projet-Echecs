@@ -10,10 +10,26 @@ public class Case {
     this.positiony = y;
     this.piece = null;
   }
-  public void occuperCase(Piece unepiece){
-    if(this.piece==null){
-      this.piece = unepiece;
-    }
+  public int getX(){
+    return this.positionx;
+  }
+  public int getY(){
+    return this.positiony;
+  }
+  public Piece getPiece(){
+    return this.piece;
+  }
+  public String getStringCase(){
+    String[] abc = {"a","b","c","d","e","f","g","h"};
+    String y = new String(abc[this.positiony]);
+    String x = new String(Integer.toString(positionx+1));
+    String str = y+x;
+    return str;
+  }
+  public Piece occuperCase(Piece unepiece){
+    Piece pieceEnlevee = this.piece;
+    this.piece = unepiece;
+    return pieceEnlevee;
   }
   public boolean estOccupee() {
     if(piece != null){

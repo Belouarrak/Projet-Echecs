@@ -4,9 +4,13 @@ public class Partie{
   private Echiquier echiquier;
   private Joueur blanc;
   private Joueur noir;
+  private Joueur joueurCourant;
+  private Scanner input;
 
   public Partie(){
+    this.input = new Scanner(System.in);
     this.initialiserPartie();
+    this.joueurCourant=this.blanc;
     System.out.println(this.getEchiquier().toString());
   };
   public Echiquier getEchiquier() {
@@ -27,15 +31,80 @@ public class Partie{
   public void setJoueurNoir(Joueur joueur) {
         this.noir = joueur;
       }
+  public void changerJoueurCourant(){
+    if(this.joueurCourant==this.blanc){
+      this.joueurCourant=this.noir;
+    }
+    else{
+      this.joueurCourant=this.blanc;
+    }
+  }
+  public void bougerPion(Case caseDep, Case caseAr){
+    //enlève la pièce de la case de départ et la pose sur la case d'arrivée
+    caseAr.occuperCase(caseDep.enleverPiece());
+  }
+  public Case[] entrerCoords(){
+    /*entrerCoords doit demander le mouvement de format "h4 b2" (par exemple), et va retoruner les deux cases en question,
+    continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
+    String coords="";
+    String[] abc = {"a","b","c","d","e","f","g","h"};
+    List<String> listabc = Arrays.asList(abc);
+    String[] nums = {"1","2","3","4","5","6","7","8"};
+    List<String> listnums = Arrays.asList(nums);
+    boolean bonformat=false;
+    while (bonformat==false){
+      //le texte est mis en minuscule et replaceAll va enlever tous les espaces (\\s+ = tous les espaces et charactères non-visibles)
+      coords = this.input.nextLine().toLowerCase().replaceAll("\\s+","");
+      //true si on a quatre charactères de format "lettre/chiffre/lettre/chiffre"
+      if (coords.length()==4){
+        if (listabc.contains(coords.charAt(0)+"") && listnums.contains(coords.charAt(1)+"") && listabc.contains(coords.charAt(2)+"") && listnums.contains(coords.charAt(3)+"") ){
+          bonformat=true;
+        }
+      }
+      else {
+        System.out.println("Veuillez entrer des cases valides. ");
+      }
+    }
+    //les lettres sont convertis en coordonnées
+    String y1string = ""+coords.charAt(0);
+    String y2string = ""+coords.charAt(2);
+    int y1=0;
+    int y2=0;
+    for (int i = 0; i<abc.length; i++){
+      if (y1string.equals(abc[i])){
+        y1 = i;
+      }
+      if (y2string.equals(abc[i])){
+        y2 = i;
+      }
+    }
+    //les chiffres sont converties en coordonnées
+    int x1 = Character.getNumericValue(coords.charAt(1))-1;
+    int x2 = Character.getNumericValue(coords.charAt(3))-1;
+    Case[] cases = new Case[2];
+    cases[0] = this.echiquier.getCase(x1,y1);
+    cases[1] = this.echiquier.getCase(x2,y2);
+    return cases;
+  }
+  public void move(){
+    System.out.println("Effectuer un mouvement: ");
+    Case[] cases = this.entrerCoords();
+    while(!this.echiquier.legalMove(this.joueurCourant, cases[0], cases[1])){
+      System.out.println("Veuillez entrer un mouvement valide.");
+      cases = this.entrerCoords();
+    }
+    this.bougerPion(cases[0], cases[1]);
+    System.out.println(this.getEchiquier().toString());
+  }
   public void initialiserPartie(){
-    Scanner input = new Scanner(System.in);
     System.out.println("Veuillez entrer le nom des joueurs: \nJoueur blanc: ");
-    String nameblanc = input.nextLine();
+    String nameblanc = this.input.nextLine();
     System.out.println("Joueur noir: ");
-    String namenoir = input.nextLine();
+    String namenoir = this.input.nextLine();
     this.setEchiquier(new Echiquier());
     this.setJoueurBlanc(new Joueur(nameblanc,true));
     this.setJoueurNoir(new Joueur(namenoir,false));
+    //Création des Pions
     for(int j=0; j<8; j++){
       Pion pawnwhite = new Pion(0);
       Pion pawnblack = new Pion(1);
@@ -102,6 +171,6 @@ public class Partie{
     Roi kingblack = new Roi(1);
     this.noir.addPiece(kingblack);
     this.echiquier.getCase(7,4).occuperCase(kingblack);
-    input.close();
+
   }
 }
