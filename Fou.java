@@ -9,6 +9,7 @@ public class Fou extends Piece{
   public int getColor(){
     return this.couleur;
   }
+  //passe par toutes les diagonales
   public boolean mouvementPossible(Echiquier board, int departX, int departY, int arriveeX, int arriveeY){
     if(Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY)){
       //diagonale haute-droite

@@ -9,6 +9,7 @@ public class Pion extends Piece{
   public int getColor(){
     return this.couleur;
   }
+  //en fonction de la couleur du pion les positions à prendre en compte sont inversées
   public boolean mouvementPossible(Echiquier board, int departX, int departY, int arriveeX, int arriveeY){
     //PION BLANC
     if (this.couleur==0) {

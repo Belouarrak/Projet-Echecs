@@ -4,6 +4,7 @@ public class Echiquier{
   private Case[][] plateau;
   private static int numTour;
 
+  //crée un plateau de 64 cases, initialise le nombre de tour à zéro
   public Echiquier(){
     this.plateau = new Case[8][8];
     for(int i=0; i<plateau.length; i++){
@@ -13,6 +14,7 @@ public class Echiquier{
     }
     this.numTour = 0;
   }
+  //retourne la case correspondant aux coordonnées x,y
   public Case getCase(int x, int y){
     return this.plateau[x][y];
   }
@@ -25,6 +27,8 @@ public class Echiquier{
   public int getNumTour(){
     return this.numTour;
   }
+  //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
+  //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
   public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr){
     //doit retourner false si la case de départ est vide
     if (!caseDep.estOccupee()){
@@ -52,6 +56,7 @@ public class Echiquier{
     }
     return false;
   }
+  //toString de l'échiquier simple pour le moment
   public String toString(){
     String str = new String("");
     str+="  +--X---+------+------+------+------+------+------+---X--+\n";

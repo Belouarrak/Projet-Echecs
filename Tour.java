@@ -9,6 +9,7 @@ public class Tour extends Piece{
   public int getColor(){
     return this.couleur;
   }
+  //ici on passe par les quatres directions orthogonales (lignes droites et gauches, colonnes hautes et basses)
   public boolean mouvementPossible(Echiquier board, int departX, int departY, int arriveeX, int arriveeY){
     //departX=arriveeX: même ligne; departY=arriveeY: même colonne
     if(departX==arriveeX || departY==arriveeY){

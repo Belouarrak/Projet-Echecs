@@ -9,6 +9,7 @@ public class Dame extends Piece{
   public int getColor(){
     return this.couleur;
   }
+  //la dame possède une combinaison des pattern du fou et de la tour
   public boolean mouvementPossible(Echiquier board, int departX, int departY, int arriveeX, int arriveeY){
     //pièce sur les diagoales ou même ligne ou même colonne
     if(Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY) || (departX==arriveeX || departY==arriveeY)){

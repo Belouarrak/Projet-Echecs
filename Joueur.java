@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Joueur{
-  private ArrayList<Piece> pieces;
+  private ArrayList<Piece> pieces; //chaque joueur a une collection constituée de ses pièces
   private String nom;
   private boolean estBlanc;
 
