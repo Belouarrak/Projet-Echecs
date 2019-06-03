@@ -1,4 +1,14 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Partie{
   private Echiquier echiquier;
@@ -9,12 +19,24 @@ public class Partie{
   public String coords=""; // J'ai changé cette variable en globale car j'en ai besoin
 
   //initialiser la partie, le scanner et le joueur courant
-  public Partie(){
+  public Partie()
+  {
     this.input = new Scanner(System.in);
     this.initialiserPartie();
     this.joueurCourant=this.blanc;
     System.out.println(this.getEchiquier().toString());
-  };
+    PrintWriter writer;
+	try {
+		writer = new PrintWriter("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt");
+		writer.print("");
+		writer.close();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+  }
+  
   public Echiquier getEchiquier() {
         return this.echiquier;
       }
@@ -33,18 +55,25 @@ public class Partie{
   public void setJoueurNoir(Joueur joueur) {
         this.noir = joueur;
       }
-  public void changerJoueurCourant(){
-    if(this.joueurCourant==this.blanc){
+  public void changerJoueurCourant()
+  {
+    if(this.joueurCourant==this.blanc)
+    {
       this.joueurCourant=this.noir;
     }
-    else{
+    else
+    {
       this.joueurCourant=this.blanc;
     }
   }
+  
   //enlève la pièce de la case de départ et la pose sur la case d'arrivée
-  public void bougerPion(Case caseDep, Case caseAr){
+  public void bougerPion(Case caseDep, Case caseAr)
+  {
     caseAr.occuperCase(caseDep.enleverPiece());
   }
+  
+  
   /*entrerCoords doit demander le mouvement de format "h4 b2" (par exemple), et va retourner les deux cases en question,
   continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
 	public Case[] entrerCoords()
