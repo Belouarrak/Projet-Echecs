@@ -16,7 +16,11 @@ public class Partie{
   private Joueur noir;
   private Joueur joueurCourant;
   private Scanner input;
-  public String coords=""; // J'ai changé cette variable en globale car j'en ai besoin
+  public String coords="1"; // J'ai changé cette variable en globale car j'en ai besoin
+  public String[] abc = {"a","b","c","d","e","f","g","h"};
+  public List<String> listabc = Arrays.asList(abc);
+  public String[] nums = {"1","2","3","4","5","6","7","8"};
+  public List<String> listnums = Arrays.asList(nums);
 
   //initialiser la partie, le scanner et le joueur courant
   public Partie()
@@ -34,6 +38,7 @@ public class Partie{
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+	
 
   }
   
@@ -79,10 +84,6 @@ public class Partie{
 	public Case[] entrerCoords()
   {
 	  int action = 0; // Pour simuler un système de tour
-	  String[] abc = {"a","b","c","d","e","f","g","h"};
-	  List<String> listabc = Arrays.asList(abc);
-	  String[] nums = {"1","2","3","4","5","6","7","8"};
-	  List<String> listnums = Arrays.asList(nums);
 	  boolean bonformat=false;
 	  while (bonformat==false)
 	  {
@@ -94,8 +95,7 @@ public class Partie{
 			  if (listabc.contains(coords.charAt(0)+"") && listnums.contains(coords.charAt(1)+"") && listabc.contains(coords.charAt(2)+"") && listnums.contains(coords.charAt(3)+""))
 			  {
 				  bonformat=true;
-				  // SAUVEGARDER FICHIER  
-				  try { 
+				  try { // SAUVEGARDER FICHIER  
 					  FileWriter fichierWrite = new FileWriter("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt", true); // Ecrire le fichier, le true permet d'append le fichier au lieu de créer un nouvel objet
 					  BufferedWriter ecrire = new BufferedWriter(fichierWrite); // Stream chaining, de convention
 					  ecrire.write(coords); // On écrit le contenu de la variable dans le fichier
@@ -105,14 +105,10 @@ public class Partie{
 				  action = action + 1; // On rajoute 1 pour garder le fil
 			  }
 		  }
-
-
 			  else //Sinon on va print:
 			  {  System.out.println("Veuillez entrer des cases valides. ");} 
 		  } 
-
-		  //les lettres sont après cela convertis en coordonnées y1 et y2
-		  String y1string = ""+coords.charAt(0);
+	  	  String y1string = ""+coords.charAt(0); //les lettres sont après cela convertis en coordonnées y1 et y2
 		  String y2string = ""+coords.charAt(2);
 		  int y1=0;
 		  int y2=0;
@@ -147,11 +143,12 @@ public class Partie{
     System.out.println(this.getEchiquier().toString());
   }
   
+  //////// Bullshit
+  
   public void ChargerPartie()
   {
 	  try { FileReader fichierRead = new FileReader("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt"); // Lire le fichier
-      BufferedReader ReadFileBuffer = new BufferedReader(fichierRead); // Lire le fichier
-      String coords = "1";
+      BufferedReader ReadFileBuffer = new BufferedReader(fichierRead); // Streaming chain, convention
       while (coords != null) 
       {
 			System.out.println(coords);
@@ -160,25 +157,37 @@ public class Partie{
 			entrerCoords(coords);
       }
       ReadFileBuffer.close();
-	  } catch (IOException e) {e.printStackTrace();}
+	  } catch (IOException e) {System.out.println(e.getMessage());}
   }
+ 
   
-	public Case[] entrerCoords(String coords) {
-		
-		return null;
-		
+	public void entrerCoords(String coords) {
+		  //les lettres sont après cela convertis en coordonnées y1 et y2
+		  String y1string = ""+coords.charAt(0);
+		  String y2string = ""+coords.charAt(2);
+		  int y1=0;
+		  int y2=0;
+		  for (int i = 0; i<abc.length; i++){
+			  if (y1string.equals(abc[i])){
+				  y1 = i;
+			  }
+			  if (y2string.equals(abc[i])){
+				  y2 = i;
+			  }
+		  }
+		  //les chiffres sont converties en coordonnées x1 et x2
+		  int x1 = Character.getNumericValue(coords.charAt(1))-1;
+		  int x2 = Character.getNumericValue(coords.charAt(3))-1;
+		  Case[] cases = new Case[2];
+		  //va return un tableau de deux cases, la première étant celle de départ, la deuxième sera celle d'arrivée
+		  cases[0] = this.echiquier.getCase(x1,y1);
+		  cases[1] = this.echiquier.getCase(x2,y2);
+		  this.bougerPion(cases[0], cases[1]);
 	}
   
   
   //Initialise les joueurs et l'échiquier
   public void initialiserPartie(){
-	  // TEST //
-	  System.out.println("Voulez-vous chargez une partie?");
-	  ChargerPartie();
-	  // TEST //
-	  
-	  
-	  
     System.out.println("Veuillez entrer le nom des joueurs: \nJoueur blanc: ");
     String nameblanc = this.input.nextLine();
     System.out.println("Joueur noir: ");
