@@ -1,4 +1,14 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Partie{
   private Echiquier echiquier;
@@ -8,12 +18,24 @@ public class Partie{
   private Scanner input;
 
   //initialiser la partie, le scanner et le joueur courant
-  public Partie(){
+  public Partie()
+  {
     this.input = new Scanner(System.in);
     this.initialiserPartie();
     this.joueurCourant=this.blanc;
     System.out.println(this.getEchiquier().toString());
-  };
+    PrintWriter writer;
+	try {
+		writer = new PrintWriter("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt");
+		writer.print("");
+		writer.close();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+  }
+  
   public Echiquier getEchiquier() {
         return this.echiquier;
       }
@@ -32,63 +54,87 @@ public class Partie{
   public void setJoueurNoir(Joueur joueur) {
         this.noir = joueur;
       }
-  public void changerJoueurCourant(){
-    if(this.joueurCourant==this.blanc){
+  public void changerJoueurCourant()
+  {
+    if(this.joueurCourant==this.blanc)
+    {
       this.joueurCourant=this.noir;
     }
-    else{
+    else
+    {
       this.joueurCourant=this.blanc;
     }
   }
+  
   //enlève la pièce de la case de départ et la pose sur la case d'arrivée
-  public void bougerPion(Case caseDep, Case caseAr){
+  public void bougerPion(Case caseDep, Case caseAr)
+  {
     caseAr.occuperCase(caseDep.enleverPiece());
   }
+  
+  
   /*entrerCoords doit demander le mouvement de format "h4 b2" (par exemple), et va retourner les deux cases en question,
   continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
-  public Case[] entrerCoords(){
-    String coords="";
-    String[] abc = {"a","b","c","d","e","f","g","h"};
-    List<String> listabc = Arrays.asList(abc);
-    String[] nums = {"1","2","3","4","5","6","7","8"};
-    List<String> listnums = Arrays.asList(nums);
-    boolean bonformat=false;
-    while (bonformat==false){
-      //le texte est mis en minuscule et replaceAll va enlever tous les espaces (\\s+ = tous les espaces et charactères non-visibles)
-      coords = this.input.nextLine().toLowerCase().replaceAll("\\s+","");
-      if (coords.length()==4){
-        //true si on a quatre charactères de format "lettre/chiffre/lettre/chiffre"
-        if (listabc.contains(coords.charAt(0)+"") && listnums.contains(coords.charAt(1)+"") && listabc.contains(coords.charAt(2)+"") && listnums.contains(coords.charAt(3)+"") ){
-          bonformat=true;
-        }
-      }
-      //Sinon on va print:
-      else {
-        System.out.println("Veuillez entrer des cases valides. ");
-      }
-    }
-    //les lettres sontaprès cela convertis en coordonnées y1 et y2
-    String y1string = ""+coords.charAt(0);
-    String y2string = ""+coords.charAt(2);
-    int y1=0;
-    int y2=0;
-    for (int i = 0; i<abc.length; i++){
-      if (y1string.equals(abc[i])){
-        y1 = i;
-      }
-      if (y2string.equals(abc[i])){
-        y2 = i;
-      }
-    }
-    //les chiffres sont converties en coordonnées x1 et x2
-    int x1 = Character.getNumericValue(coords.charAt(1))-1;
-    int x2 = Character.getNumericValue(coords.charAt(3))-1;
-    Case[] cases = new Case[2];
-    //va return un tableau de deux cases, la première étant celle de départ, la deuxième sera celle d'arrivée
-    cases[0] = this.echiquier.getCase(x1,y1);
-    cases[1] = this.echiquier.getCase(x2,y2);
-    return cases;
-  }
+	public Case[] entrerCoords()
+  {
+	  int action = 0;
+	  String coords="";
+	  String[] abc = {"a","b","c","d","e","f","g","h"};
+	  List<String> listabc = Arrays.asList(abc);
+	  String[] nums = {"1","2","3","4","5","6","7","8"};
+	  List<String> listnums = Arrays.asList(nums);
+	  boolean bonformat=false;
+	  while (bonformat==false)
+	  {
+		  // le texte est mis en minuscule et replaceAll va enlever tous les espaces (\\s+ = tous les espaces et charactères non-visibles)
+		  coords = this.input.nextLine().toLowerCase().replaceAll("\\s+","");
+		  if (coords.length()==4)
+		  {
+			  //true si on a quatre charactères de format "lettre/chiffre/lettre/chiffre"
+			  if (listabc.contains(coords.charAt(0)+"") && listnums.contains(coords.charAt(1)+"") && listabc.contains(coords.charAt(2)+"") && listnums.contains(coords.charAt(3)+""))
+			  {
+				  bonformat=true;
+				  // SAUVEGARDER FICHIER  
+				  try { 
+					  FileWriter fichierWrite = new FileWriter("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt", true); // Ecrire le fichier
+					  BufferedWriter ecrire = new BufferedWriter(fichierWrite); // Stream chaining
+					  ecrire.write(coords);
+					  ecrire.newLine();
+					  ecrire.close();
+					  } catch (IOException Ex) {System.out.println(Ex.getMessage());}
+				  action = action + 1;
+			  }
+		  }
+
+
+			  else //Sinon on va print:
+			  {  System.out.println("Veuillez entrer des cases valides. ");} 
+		  } 
+
+		  //les lettres sont après cela convertis en coordonnées y1 et y2
+		  String y1string = ""+coords.charAt(0);
+		  String y2string = ""+coords.charAt(2);
+		  int y1=0;
+		  int y2=0;
+		  for (int i = 0; i<abc.length; i++){
+			  if (y1string.equals(abc[i])){
+				  y1 = i;
+			  }
+			  if (y2string.equals(abc[i])){
+				  y2 = i;
+			  }
+		  }
+		  //les chiffres sont converties en coordonnées x1 et x2
+		  int x1 = Character.getNumericValue(coords.charAt(1))-1;
+		  int x2 = Character.getNumericValue(coords.charAt(3))-1;
+		  Case[] cases = new Case[2];
+		  //va return un tableau de deux cases, la première étant celle de départ, la deuxième sera celle d'arrivée
+		  cases[0] = this.echiquier.getCase(x1,y1);
+		  cases[1] = this.echiquier.getCase(x2,y2);
+		  return cases;
+	  }
+  
+  
   //move, tant que le mouvement n'est pas bon pour legalMove, va appeller entrerCoords, puis effectuer le mouvement avec la méthode bougerPion
   public void move(){
     System.out.println("Effectuer un mouvement: ");
@@ -100,8 +146,21 @@ public class Partie{
     this.bougerPion(cases[0], cases[1]);
     System.out.println(this.getEchiquier().toString());
   }
+  
+  public void ChargerPartie()
+  {
+	  
+  }
+  
+  
   //Initialise les joueurs et l'échiquier
   public void initialiserPartie(){
+	  // TEST //
+	  System.out.println("Voulez-vous chargez une partie?");
+	  ChargerPartie();
+	  
+	  
+	  
     System.out.println("Veuillez entrer le nom des joueurs: \nJoueur blanc: ");
     String nameblanc = this.input.nextLine();
     System.out.println("Joueur noir: ");
