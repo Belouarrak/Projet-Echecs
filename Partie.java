@@ -29,7 +29,7 @@ public class Partie{
     this.initialiserPartie();
     this.joueurCourant=this.blanc;
     System.out.println(this.getEchiquier().toString());
-    PrintWriter writer;
+    /*PrintWriter writer;
 	try {
 		writer = new PrintWriter("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt");
 		writer.print("");
@@ -37,7 +37,7 @@ public class Partie{
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}
+	}*/
 	
 
   }
@@ -96,7 +96,7 @@ public class Partie{
 			  {
 				  bonformat=true;
 				  try { // SAUVEGARDER FICHIER  
-					  FileWriter fichierWrite = new FileWriter("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt", true); // Ecrire le fichier, le true permet d'append le fichier au lieu de créer un nouvel objet
+					  FileWriter fichierWrite = new FileWriter("Fichiertxt.txt", true); // Ecrire le fichier, le true permet d'append le fichier au lieu de créer un nouvel objet
 					  BufferedWriter ecrire = new BufferedWriter(fichierWrite); // Stream chaining, de convention
 					  ecrire.write(coords); // On écrit le contenu de la variable dans le fichier
 					  ecrire.newLine(); // On passe à la ligne suivante
@@ -139,26 +139,34 @@ public class Partie{
       System.out.println("Veuillez entrer un mouvement valide.");
       cases = this.entrerCoords();
     }
+    
     this.bougerPion(cases[0], cases[1]);
     System.out.println(this.getEchiquier().toString());
   }
   
-  //////// Bullshit
+  //////// Mes methodes
   
-  public void ChargerPartie()
+  
+  
+  public void ChargerPartie() throws Exception
   {
-	  try { FileReader fichierRead = new FileReader("C:\\Users\\dream\\Documents\\Code\\Projet-Echecs\\Fichiertxt.txt"); // Lire le fichier
+	  FileReader fichierRead = new FileReader("Fichiertxt.txt"); // Lire le fichier
       BufferedReader ReadFileBuffer = new BufferedReader(fichierRead); // Streaming chain, convention
-      while (coords != null) 
+      String ligne = "1";
+
+  
+	while ((ligne = ReadFileBuffer.readLine()) != null)
       {
-			System.out.println(coords);
 			// read next line
-			coords = ReadFileBuffer.readLine();
+			coords = ligne;
+			System.out.println(ligne);
 			entrerCoords(coords);
-      }
+      } 
       ReadFileBuffer.close();
-	  } catch (IOException e) {System.out.println(e.getMessage());}
-  }
+   }
+	  
+	  
+
  
   
 	public void entrerCoords(String coords) {
@@ -183,6 +191,7 @@ public class Partie{
 		  cases[0] = this.echiquier.getCase(x1,y1);
 		  cases[1] = this.echiquier.getCase(x2,y2);
 		  this.bougerPion(cases[0], cases[1]);
+		  System.out.println(this.getEchiquier().toString());
 	}
   
   

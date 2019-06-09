@@ -1,3 +1,7 @@
 a2a3
 b2b3
 c2c3
+d2d3
+b1g6a1a2
+c1c2
+d1d2
