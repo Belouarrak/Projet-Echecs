@@ -10,17 +10,41 @@ public class Case {
     this.positiony = y;
     this.piece = null;
   }
-  public int getX(){
+  public Case(Case case1) {
+    this.positionx = case1.getX();
+    this.positiony = case1.getY();
+    if (case1.getPiece()!=null) {
+      if (case1.getPiece() instanceof Roi){
+        this.piece = new Roi(case1.getPiece().getColor());
+      }
+      else if (case1.getPiece() instanceof Dame){
+        this.piece = new Dame(case1.getPiece().getColor());
+      }
+      else if (case1.getPiece() instanceof Tour){
+        this.piece = new Tour(case1.getPiece().getColor());
+      }
+      else if (case1.getPiece() instanceof Fou){
+        this.piece = new Fou(case1.getPiece().getColor());
+      }
+      else if (case1.getPiece() instanceof Cavalier){
+        this.piece = new Cavalier(case1.getPiece().getColor());
+      }
+      else {
+        this.piece = new Pion(case1.getPiece().getColor());
+      }
+    }
+  }
+  public int getX() {
     return this.positionx;
   }
-  public int getY(){
+  public int getY() {
     return this.positiony;
   }
-  public Piece getPiece(){
+  public Piece getPiece() {
     return this.piece;
   }
   //getStringCase va retourner les coordonnées de la case au format normal de position aux échecs (ex:"b2"), va servir pour les prints de certains messages d'erreur
-  public String getStringCase(){
+  public String getStringCase() {
     String[] abc = {"a","b","c","d","e","f","g","h"};
     String y = new String(abc[this.positiony]);
     String x = new String(Integer.toString(positionx+1));
@@ -28,7 +52,7 @@ public class Case {
     return str;
   }
   //occuperCase prend une piece en paramètre et va poser celle-ci sur la case, si la case était initialement occupée, la case initiale sera retournée
-  public Piece occuperCase(Piece unepiece){
+  public Piece occuperCase(Piece unepiece) {
     Piece pieceEnlevee = this.piece;
     this.piece = unepiece;
     return pieceEnlevee;
@@ -40,13 +64,13 @@ public class Case {
     return false;
       }
   //retourne la pièce occupee est attache null à la case
-  public Piece enleverPiece(){
+  public Piece enleverPiece() {
     Piece enlevee = this.piece;
     this.piece = null;
     return enlevee;
   }
   //la case vide, en ce moment, est marquée par "xxxxxx"
-  public String toString(){
+  public String toString() {
     if(this.piece==null){
       return("XXXXXX");
     }

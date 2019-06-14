@@ -7,12 +7,21 @@ public class Echiquier{
   //crée un plateau de 64 cases, initialise le nombre de tour à zéro
   public Echiquier(){
     this.plateau = new Case[8][8];
-    for(int i=0; i<plateau.length; i++){
-      for(int j=0; j<plateau.length; j++){
+    for(int i=0; i<this.plateau.length; i++){
+      for(int j=0; j<this.plateau.length; j++){
         this.plateau[i][j] = new Case(i, j);
       }
     }
     this.numTour = 0;
+  }
+  public Echiquier(Echiquier firstBoard){
+    this.plateau = new Case[8][8];
+    for(int i=0; i<this.plateau.length; i++){
+      for(int j=0; j<this.plateau.length; j++){
+        this.plateau[i][j] = new Case(firstBoard.getCase(i,j));
+      }
+    }
+    this.numTour = firstBoard.getNumTour();
   }
   //retourne la case correspondant aux coordonnées x,y
   public Case getCase(int x, int y){
@@ -24,6 +33,18 @@ public class Echiquier{
     }
     return false;
   }*/
+  public Case getCaseRoi(Joueur player){
+    for(int i=0; i<this.plateau.length; i++){
+      for(int j=0; j<this.plateau.length; j++){
+        if (this.plateau[i][j].getPiece()!=null){
+          if (this.plateau[i][j].getPiece().getColor()==player.getPlayerColor() && this.plateau[i][j].getPiece() instanceof Roi){
+            return this.plateau[i][j];
+          }
+        }
+      }
+    }
+    return null;
+  }
   public int getNumTour(){
     return this.numTour;
   }
