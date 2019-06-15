@@ -15,7 +15,7 @@ public class Pion extends Piece{
     if (this.couleur==0) {
       //true si la case est de distance 2 devant la case de départ (x+2) et le pion est à sa positon initiale et la case entre les deux est vide
       if (departX==1){
-        if(arriveeX==departX+2 && departY==arriveeY && !board.getCase(departX+1, departY).estOccupee()){
+        if(arriveeX==departX+2 && departY==arriveeY && !board.getCase(departX+1, departY).estOccupee() && !board.getCase(departX+2, departY).estOccupee()){
           return true;
         }
       }
@@ -29,10 +29,10 @@ public class Pion extends Piece{
       }
     }
     //PION NOIR
-    if (this.couleur==1) {
+    else {
       //true si la case est de distance 2 devant la case de départ (x-2) et le pion est à sa positon initiale et la case entre les deux est vide
       if (departX==6){
-        if(arriveeX==departX-2 && departY==arriveeY && !board.getCase(departX-1, departY).estOccupee()){
+        if(arriveeX==departX-2 && departY==arriveeY && !board.getCase(departX-1, departY).estOccupee() && !board.getCase(departX-2, departY).estOccupee()){
           return true;
         }
       }

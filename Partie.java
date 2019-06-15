@@ -5,6 +5,7 @@ public class Partie{
   private Joueur blanc;
   private Joueur noir;
   private Joueur joueurCourant;
+  private Joueur joueurGagnant = null;
   private Scanner input;
 
   //initialiser la partie, le scanner et le joueur courant
@@ -93,8 +94,8 @@ public class Partie{
 
   }
   public Echiquier getEchiquier() {
-        return this.echiquier;
-      }
+      return this.echiquier;
+    }
   public void setEchiquier(Echiquier echiquier) {
         this.echiquier = echiquier;
       }
@@ -117,10 +118,6 @@ public class Partie{
     else{
       this.joueurCourant=this.blanc;
     }
-  }
-  //enlève la pièce de la case de départ et la pose sur la case d'arrivée
-  public void bougerPion(Case caseDep, Case caseAr) {
-    caseAr.occuperCase(caseDep.enleverPiece());
   }
   /*entrerCoords doit demander le mouvement de format "h4 b2" (par exemple), et va retourner les deux cases en question,
   continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
@@ -167,18 +164,123 @@ public class Partie{
     cases[1] = this.echiquier.getCase(x2,y2);
     return cases;
   }
-  //move, tant que le mouvement n'est pas bon pour legalMove, va appeller entrerCoords, puis effectuer le mouvement avec la méthode bougerPion
+  //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
+  //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
+  public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr){
+    //doit retourner false si la case de départ est vide
+    if (!caseDep.estOccupee()){
+      return false;
+    }
+    //doit retoruner false si la case de départ n'est pas celle du joueur courrant
+    if (currentPlayer.getPlayerColor()!=caseDep.getPiece().getColor()){
+      return false;
+    }
+    //return true si la pièce peut effectuer le mouvement selon les règles du jeu
+    //(la case fait partie du chemin et il n'y a pas d'autre pièce dessus qui la sépare de la case de départ)
+    if (caseDep.getPiece().mouvementPossible(this.getEchiquier(),caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY())){
+      //doit retoruner false si la case d'arrivée est occupée par une pièce du même joueur
+      if(caseAr.estOccupee()){
+        if(caseDep.getPiece().getColor()==caseAr.getPiece().getColor()){
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+  public boolean estEnEchec(Joueur joueur, Echiquier board){
+    for (int i=0; i<8;i++){
+      for (int j=0;j<8;j++){
+        //si une pièce du joueur opposé peut capturer le roi, on est en échec
+        if (this.legalMove(this.joueurOppose(joueur), board.getCase(i,j), board.getCaseRoi(joueur))){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  public Joueur joueurOppose(Joueur joueur){
+    if(joueur==this.blanc){
+      return this.noir;
+    }
+    else{
+      return this.blanc;
+    }
+  }
+  //moveMetEchec regarde si le mouvement effectué ne met pas en situation d'échec
+  public boolean moveMetEchec(Joueur joueur,Case caseDep, Case caseAr){
+    //vérifie au préalable si le mouvement est dans les règles
+    if (this.legalMove(joueur, caseDep, caseAr)==false){
+      return true;
+    }
+    Echiquier newBoard = new Echiquier(this.echiquier);
+    newBoard.bougerPiece(caseDep, caseAr);
+    if (this.estEnEchec(joueur, newBoard)){
+      return true;
+    }
+    return false;
+  }
+  public boolean noLegalMovePossible(Joueur joueur, Echiquier board){
+    for(int i=0;i<8;i++){
+      for(int j=0;j<8;j++){
+        //si la case contient une pièce du joueur on regarde si elle peut effectuer un mouvement qui ne met pas en échec
+        if (board.getCase(i,j).getPiece()!=null){
+          if (board.getCase(i,j).getPiece().getColor()==joueur.getPlayerColor()){
+            for(int x=0;x<8;x++){
+              for(int y=0;y<8;y++){
+                if (this.moveMetEchec(joueur, board.getCase(i,j), board.getCase(x,y))==false){
+                  System.out.println("move pour lequel on sort de l'échec "+board.getCase(i,j).getStringCase()+ board.getCase(x,y).getStringCase());
+                  return false;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return true;
+  }
+  //move, tant que le mouvement n'est pas bon pour legalMove, va appeller entrerCoords, puis effectuer le mouvement avec la méthode bougerPiece
   public void move() {
     System.out.println("Effectuer un mouvement: ");
     Case[] cases = this.entrerCoords();
-    while(!this.echiquier.legalMove(this.joueurCourant, cases[0], cases[1])){
-      System.out.println("Veuillez entrer un mouvement valide.");
+    while(this.legalMove(this.joueurCourant, cases[0], cases[1])==false && this.moveMetEchec(this.joueurCourant, cases[0], cases[1])==true){
+      System.out.println("Veuillez entrer un mouvement valide.1");
       cases = this.entrerCoords();
     }
-    this.bougerPion(cases[0], cases[1]);
+    this.echiquier.bougerPiece(cases[0], cases[1]);
     System.out.println(this.getEchiquier().toString());
   }
-  public boolean estEnEchec(Joueur player) {
-
+  public void lancerPartie(){
+    boolean finpartie = false;
+    while(!finpartie){
+      System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.\nEffectuer un mouvement: ");
+      //vérifier si le joueur est en échec
+      if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
+        System.out.println("Je suis dans lancerPartie premier if, le joueur est en échec.");
+        //vérifier si le joueur est en échecs et mat
+        System.out.println("Verficiation noLegalMovePossible: "+ this.noLegalMovePossible(this.joueurCourant, this.echiquier));
+        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+          finpartie = true;
+          this.joueurGagnant = this.joueurOppose(this.joueurCourant);
+          System.out.println("Partie terminée. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
+        }
+        else{
+          this.move();
+        }
+      }
+      else{
+        System.out.println("Jsuis dans lancerPartie sur le premier else, le joueur est pas en echec");
+        //vérifier sit Pat
+        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+          finpartie = true;
+          System.out.println("Vous avez atteint un Pat, personne ne gagne.");
+        }
+        else{
+          this.move();
+        }
+      }
+      this.changerJoueurCourant();
+    }
   }
 }

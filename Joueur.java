@@ -2,7 +2,6 @@ import java.util.*;
 
 public class Joueur{
   private ArrayList<Piece> pieces; //chaque joueur a une collection constituée de ses pièces
-  private ArrayList<Case[]> movesEchecs;
   private String nom;
   private int couleur;
 
@@ -10,7 +9,6 @@ public class Joueur{
     this.nom = name;
     this.couleur = couleur;
     this.pieces = new ArrayList<Piece>();
-    this.movesEchecs = new ArrayList<Case[]>();
   }
   public void setNom(String name){
     this.nom = name;

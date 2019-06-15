@@ -33,6 +33,9 @@ public class Case {
         this.piece = new Pion(case1.getPiece().getColor());
       }
     }
+    else{
+      this.piece=null;
+    }
   }
   public int getX() {
     return this.positionx;
@@ -59,10 +62,11 @@ public class Case {
   }
   //estOccupee retourne true si la case est occupee
   public boolean estOccupee() {
-    if(piece != null){
-      return true;}
+    if(this.piece != null){
+      return true;
+    }
     return false;
-      }
+  }
   //retourne la pièce occupee est attache null à la case
   public Piece enleverPiece() {
     Piece enlevee = this.piece;

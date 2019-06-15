@@ -16,12 +16,16 @@ public class Echiquier{
   }
   public Echiquier(Echiquier firstBoard){
     this.plateau = new Case[8][8];
-    for(int i=0; i<this.plateau.length; i++){
-      for(int j=0; j<this.plateau.length; j++){
+    for(int i=0; i<8; i++){
+      for(int j=0; j<8; j++){
         this.plateau[i][j] = new Case(firstBoard.getCase(i,j));
       }
     }
     this.numTour = firstBoard.getNumTour();
+  }
+  //enlève la pièce de la case de départ et la pose sur la case d'arrivée
+  public void bougerPiece(Case caseDep, Case caseAr) {
+    this.getCase(caseAr.getX(), caseAr.getY()).occuperCase(this.getCase(caseDep.getX(), caseDep.getY()).enleverPiece());
   }
   //retourne la case correspondant aux coordonnées x,y
   public Case getCase(int x, int y){
@@ -48,35 +52,7 @@ public class Echiquier{
   public int getNumTour(){
     return this.numTour;
   }
-  //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
-  //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
-  public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr){
-    //doit retourner false si la case de départ est vide
-    if (!caseDep.estOccupee()){
-      System.out.println("La case "+caseDep.getStringCase()+" est vide.");
-      System.out.println("Veuillez effectuer un mouvement valide. ");
-      return false;
-    }
-    //doit retoruner false si la case de départ n'est pas celle du joueur courrant
-    if (!currentPlayer.getPiecesJoueur().contains(caseDep.getPiece())){
-      System.out.println("La case "+caseDep.getStringCase()+" n'est pas la votre. ");
-      System.out.println("Veuillez effectuer un mouvement valide. ");
-      return false;
-    }
-    //return true si la pièce peut effectuer le mouvement selon les règles du jeu
-    //(la case fait partie du chemin et il n'y a pas d'autre pièce dessus qui la sépare de la case de départ)
-    if (caseDep.getPiece().mouvementPossible(this,caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY())){
-      //doit retoruner false si la case d'arrivée est occupée par une pièce du même joueur
-      if(caseAr.estOccupee()){
-        if(caseDep.getPiece().getColor()==caseAr.getPiece().getColor()){
-          System.out.println("La case "+caseAr.getStringCase()+" contient une pièce de la même couleur.");
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
+
   //toString de l'échiquier simple pour le moment
   public String toString(){
     String str = new String("");
