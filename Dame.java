@@ -14,7 +14,8 @@ public class Dame extends Piece{
     //pièce sur les diagoales ou même ligne ou même colonne
     if(Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY) || (departX==arriveeX || departY==arriveeY)){
       //diagonale haute-droite
-      if(arriveeX-departX==arriveeY-departY){
+      if(arriveeX-departX>0 && arriveeY-departY>0){
+        System.out.println("HAUTE DROITE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<arriveeX-departX; i++){
           if (board.getCase(departX+i, departY+i).estOccupee()){
@@ -24,7 +25,8 @@ public class Dame extends Piece{
         return true;
       }
       //diagonale haute-gauche
-      if(arriveeX-departX==departY-arriveeY){
+      if(arriveeX-departX>0 && arriveeY-departY<0){
+        System.out.println("HAUTE GAUCHE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<arriveeX-departX; i++){
           if (board.getCase(departX+i, departY-i).estOccupee()){
@@ -34,9 +36,11 @@ public class Dame extends Piece{
         return true;
       }
       //diagonale basse-droite
-      if(departX-arriveeX==arriveeY-departY){
+      if(arriveeX-departX<0 && arriveeY-departY>0){
+        System.out.println("BASSE DROITE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<departX-arriveeX; i++){
+          System.out.println(board.getCase(departX-i, departY+i).getStringCase());
           if (board.getCase(departX-i, departY+i).estOccupee()){
             return false;
           }
@@ -44,9 +48,11 @@ public class Dame extends Piece{
         return true;
       }
       //diagonale basse-gauche
-      if(departX-arriveeX==departY-arriveeY){
+      if(arriveeX-departX<0 && arriveeY-departY<0){
+        System.out.println("BASSE GAUCHE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<departX-arriveeX; i++){
+          System.out.println(board.getCase(departX-i, departY-i).getStringCase());
           if (board.getCase(departX-i, departY-i).estOccupee()){
             return false;
           }

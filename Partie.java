@@ -166,7 +166,7 @@ public class Partie{
   }
   //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
   //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
-  public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr){
+  public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr, Echiquier board){
     //doit retourner false si la case de départ est vide
     if (!caseDep.estOccupee()){
       return false;
@@ -177,7 +177,7 @@ public class Partie{
     }
     //return true si la pièce peut effectuer le mouvement selon les règles du jeu
     //(la case fait partie du chemin et il n'y a pas d'autre pièce dessus qui la sépare de la case de départ)
-    if (caseDep.getPiece().mouvementPossible(this.getEchiquier(),caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY())){
+    if (caseDep.getPiece().mouvementPossible(board,caseDep.getX(), caseDep.getY(),caseAr.getX(), caseAr.getY())){
       //doit retoruner false si la case d'arrivée est occupée par une pièce du même joueur
       if(caseAr.estOccupee()){
         if(caseDep.getPiece().getColor()==caseAr.getPiece().getColor()){
@@ -192,7 +192,7 @@ public class Partie{
     for (int i=0; i<8;i++){
       for (int j=0;j<8;j++){
         //si une pièce du joueur opposé peut capturer le roi, on est en échec
-        if (this.legalMove(this.joueurOppose(joueur), board.getCase(i,j), board.getCaseRoi(joueur))){
+        if (this.legalMove(this.joueurOppose(joueur), board.getCase(i,j), board.getCaseRoi(joueur), board)){
           return true;
         }
       }
@@ -210,7 +210,7 @@ public class Partie{
   //moveMetEchec regarde si le mouvement effectué ne met pas en situation d'échec
   public boolean moveMetEchec(Joueur joueur,Case caseDep, Case caseAr){
     //vérifie au préalable si le mouvement est dans les règles
-    if (this.legalMove(joueur, caseDep, caseAr)==false){
+    if (this.legalMove(joueur, caseDep, caseAr, this.echiquier)==false){
       return true;
     }
     Echiquier newBoard = new Echiquier(this.echiquier);
@@ -218,6 +218,7 @@ public class Partie{
     if (this.estEnEchec(joueur, newBoard)){
       return true;
     }
+    System.out.println(newBoard.getCaseRoi(joueur).getStringCase());
     return false;
   }
   public boolean noLegalMovePossible(Joueur joueur, Echiquier board){
@@ -244,7 +245,7 @@ public class Partie{
   public void move() {
     System.out.println("Effectuer un mouvement: ");
     Case[] cases = this.entrerCoords();
-    while(this.legalMove(this.joueurCourant, cases[0], cases[1])==false && this.moveMetEchec(this.joueurCourant, cases[0], cases[1])==true){
+    while(this.legalMove(this.joueurCourant, cases[0], cases[1], this.echiquier)==false && this.moveMetEchec(this.joueurCourant, cases[0], cases[1])==true){
       System.out.println("Veuillez entrer un mouvement valide.1");
       cases = this.entrerCoords();
     }
@@ -271,7 +272,7 @@ public class Partie{
       }
       else{
         System.out.println("Jsuis dans lancerPartie sur le premier else, le joueur est pas en echec");
-        //vérifier sit Pat
+        //vérifier si Pat
         if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
           finpartie = true;
           System.out.println("Vous avez atteint un Pat, personne ne gagne.");
