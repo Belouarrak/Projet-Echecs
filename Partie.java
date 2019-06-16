@@ -134,6 +134,9 @@ public class Partie{
       this.joueurCourant=this.blanc;
     }
   }
+  public Joueur getJoueurCourant(){
+    return this.joueurCourant;
+  }
   /*entrerCoords doit demander le mouvement de format "h4 b2" (par exemple), et va retourner les deux cases en question,
   continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
   public Case[] entrerCoords() {
@@ -291,6 +294,15 @@ public class Partie{
       System.out.println(this.getEchiquier().toString());
     }
   }
+  public void move(Case caseDep, Case caseAr){
+    if (this.legalMove(this.joueurCourant, caseDep, caseAr, this.echiquier)==true && this.moveMetEchec(this.joueurCourant, caseDep, caseAr)==false){
+      this.echiquier.bougerPiece(caseDep, caseAr);
+      if (this.promouvoirPion(this.echiquier.getCase(caseAr.getX(), caseAr.getY()))){
+        //System.out.println(this.getEchiquier().toString());
+      }
+      this.changerJoueurCourant();
+    }
+  }
   public boolean promouvoirPion(Case box){
     if (box.estOccupee() && box.getPiece().getColor()==this.joueurCourant.getPlayerColor() && box.getPiece() instanceof Pion){
       if(this.joueurCourant==this.blanc && box.getX()==7){
@@ -338,33 +350,34 @@ public class Partie{
       }
     }
   }
-  public boolean lancerPartie(){
+  public void lancerPartie(){
     boolean finpartie = false;
-    System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
-    //vérifier si le joueur est en échec
-    if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
-      //vérifier si le joueur est en échecs et mat
-      System.out.println("Verficiation noLegalMovePossible: "+ this.noLegalMovePossible(this.joueurCourant, this.echiquier));
-      if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
-        this.joueurGagnant = this.joueurOppose(this.joueurCourant);
-        System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
-        return true;
+    while(!finpartie){
+      System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
+      //vérifier si le joueur est en échec
+      if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
+        //vérifier si le joueur est en échecs et mat
+        System.out.println("Verficiation noLegalMovePossible: "+ this.noLegalMovePossible(this.joueurCourant, this.echiquier));
+        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+          finpartie = true;
+          this.joueurGagnant = this.joueurOppose(this.joueurCourant);
+          System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
+        }
+        else{
+          this.move();
+        }
       }
       else{
-        this.move();
+        //vérifier si Pat
+        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+          finpartie = true;
+          System.out.println("Vous avez atteint un Pat, personne ne gagne.");
+        }
+        else{
+          this.move();
+        }
       }
+      this.changerJoueurCourant();
     }
-    else{
-      //vérifier si Pat
-      if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
-        System.out.println("Vous avez atteint un Pat, personne ne gagne.");
-        return true;
-      }
-      else{
-        this.move();
-      }
-    }
-    this.changerJoueurCourant();
-    return false;
   }
 }
