@@ -338,34 +338,33 @@ public class Partie{
       }
     }
   }
-  public void lancerPartie(){
+  public boolean lancerPartie(){
     boolean finpartie = false;
-    while(!finpartie){
-      System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
-      //vérifier si le joueur est en échec
-      if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
-        //vérifier si le joueur est en échecs et mat
-        System.out.println("Verficiation noLegalMovePossible: "+ this.noLegalMovePossible(this.joueurCourant, this.echiquier));
-        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
-          finpartie = true;
-          this.joueurGagnant = this.joueurOppose(this.joueurCourant);
-          System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
-        }
-        else{
-          this.move();
-        }
+    System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
+    //vérifier si le joueur est en échec
+    if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
+      //vérifier si le joueur est en échecs et mat
+      System.out.println("Verficiation noLegalMovePossible: "+ this.noLegalMovePossible(this.joueurCourant, this.echiquier));
+      if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+        this.joueurGagnant = this.joueurOppose(this.joueurCourant);
+        System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
+        return true;
       }
       else{
-        //vérifier si Pat
-        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
-          finpartie = true;
-          System.out.println("Vous avez atteint un Pat, personne ne gagne.");
-        }
-        else{
-          this.move();
-        }
+        this.move();
       }
-      this.changerJoueurCourant();
     }
+    else{
+      //vérifier si Pat
+      if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+        System.out.println("Vous avez atteint un Pat, personne ne gagne.");
+        return true;
+      }
+      else{
+        this.move();
+      }
+    }
+    this.changerJoueurCourant();
+    return false;
   }
 }
