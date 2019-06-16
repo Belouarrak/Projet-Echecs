@@ -341,7 +341,7 @@ public class Partie{
   public void lancerPartie(){
     boolean finpartie = false;
     while(!finpartie){
-      System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.\nEffectuer un mouvement: ");
+      System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
       //vérifier si le joueur est en échec
       if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
         //vérifier si le joueur est en échecs et mat
