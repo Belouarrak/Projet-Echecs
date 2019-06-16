@@ -9,6 +9,8 @@ import javax.imageio.ImageIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 	public class ChessGUI extends JPanel {
 
@@ -16,7 +18,7 @@ import java.util.*;
 	private JButton[][] chessBoardSquares = new JButton[8][8]; // 8X8 Jbutton
 	private Image[][] chessPieceImages = new Image[2][6]; // IMAGE DE CHESSPIECE
 	private JPanel echiquier, boardConstrain; // Echiquier
-	private final JLabel message = new JLabel("Chess Champ is ready to play!"); // JLABEL POUR ECHIQUIER
+	private JLabel message = new JLabel("Appuyez sur Nouvelle Partie !"); // JLABEL POUR ECHIQUIER
 	private static final String COLS = "ABCDEFGH"; // REPRESENTATION DE L'INTERFACE
 	public static final int QUEEN = 0, KING = 1, ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5; // PIECES VARIABLES
 	public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK };// TABLEAU DE PIECES
@@ -30,6 +32,7 @@ import java.util.*;
 	private Case[] caseMove = new Case[2];
 	private ArrayList<String> historiqueMoves;
 	private JTextArea panelHistorique;
+	private boolean finpartie = false;
 
 	ChessGUI() {
 		initializeGui();
@@ -45,18 +48,27 @@ import java.util.*;
 		JToolBar tools = new JToolBar(); // Toolbar en haut
 		tools.setFloatable(true); // Pour pouvoir déplacer le JToolbar en haut
 		gui.add(tools, BorderLayout.NORTH); // TOOLBAR AU NORD
-		JPanel info = new JPanel(new GridLayout(10, 1));
+		//JPanel info = new JPanel(new GridLayout(10, 1));
 		String i = "FALSE";
 		JLabel echec = new JLabel("ECHEC =   " + i);
 		JLabel echecmat = new JLabel("ECHEC ET MAT =  " + i);
 		this.panelHistorique = new JTextArea();
 		this.panelHistorique.setEditable(false);
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		this.panelHistorique.setMaximumSize(new Dimension(170,700));
+		this.panelHistorique.setPreferredSize(new Dimension(170,700));
+		this.panelHistorique.setBorder(blackline);
+		this.panelHistorique.setLineWrap(true);
+		this.panelHistorique.setBackground(new Color(213, 205, 193));
+		Font font = new Font("Arial", Font.BOLD, 14);
+    this.panelHistorique.setFont(font);
+		JScrollPane scrollPane = new JScrollPane(this.panelHistorique);
 		echec.setVerticalAlignment(JLabel.TOP);
 		echecmat.setVerticalAlignment(JLabel.TOP);
-		info.add(echec, BorderLayout.EAST);
-		info.add(echecmat, BorderLayout.EAST);
-		gui.add(info, BorderLayout.EAST);
-		gui.add(this.panelHistorique, BorderLayout.EAST);
+		//info.add(echec, BorderLayout.EAST);
+		//info.add(echecmat, BorderLayout.EAST);
+		//gui.add(info, BorderLayout.EAST);
+		gui.add(scrollPane, BorderLayout.WEST);
 		this.nouvellePartie.addActionListener(new NouvellePartieListener());
 		tools.add(nouvellePartie);
 		tools.add(sauvegarder); // TODO - add functionality! POUR SAUVEGARDER
@@ -174,47 +186,42 @@ import java.util.*;
 	}
 	public void newGame(){
 		this.partie = new Partie();
+		JOptionPane jOp = new JOptionPane();
+    String nomblanc = jOp.showInputDialog("A qui sont les pieces blanches?");
+		this.partie.setJoueurBlanc(new Joueur(nomblanc,0));
+		String nomnoir = jOp.showInputDialog("A qui sont les pieces noires?");
+		this.partie.setJoueurNoir(new Joueur(nomnoir,1));
+		this.partie.setJoueurCourant();
+		this.finpartie=false;
 		this.historiqueMoves = new ArrayList<String>();
+		this.panelHistorique.setText(toStringHistorique());
 		setupBoard(this.partie.getEchiquier());
 	}
 	//public void playMove()
 
-	/*public void play(){
-
-		if
-			//System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
-      //vérifier si le joueur est en échec
-      if (this.partie.estEnEchec(this.joueurCourant, this.echiquier)==true){
-        //vérifier si le joueur est en échecs et mat
-        if (this.partie.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
-          finpartie = true;
-          this.joueurGagnant = this.joueurOppose(this.joueurCourant);
-          //System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
-        }
-        else{
-          this.move();
-        }
-      }
-      else{
-        //vérifier si Pat
-        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
-          finpartie = true;
-          //System.out.println("Vous avez atteint un Pat, personne ne gagne.");
-        }
-        else{
-          this.move();
-        }
-      }
-      this.changerJoueurCourant();
-    }
-			System.out.println("AVANT DE REFRESH"+this.partie.getEchiquier().toString());
-			setupBoard(this.partie.getEchiquier());
-		}
-	}*/
+	public void checkPartie(){
+		this.message.setText("C'est au tour de "+this.partie.getJoueurCourant().getNom()+" de jouer.");
+	  //vérifier si le joueur est en échec
+		JOptionPane jop = new JOptionPane();
+	  if (this.partie.estEnEchec(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
+	    //vérifier si le joueur est en échecs et mat
+	    if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
+				this.finpartie = true;
+	      this.partie.setJoueurGagnant(this.partie.joueurOppose(this.partie.getJoueurCourant()));
+				jop.showMessageDialog(this, "Partie terminee. Le gagnant de la partie est "+this.partie.getJoueurGagnant().getNom()+"!!!");
+	    }
+	  }
+	  else{
+	    //vérifier si Pat
+	    if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
+				this.finpartie = true;
+	      jop.showMessageDialog(this, "Vous avez atteint un Pat, personne ne gagne.");
+	    }
+	  }
+	}
 
 	public void setupBoard(Echiquier echiquier) {
 		if (this.partie!=null){
-			message.setText("Make your move!");
 			// set up les pieces
 			for (int i = 0; i<8;i++) {
 				for(int j = 0; j<8; j++){
@@ -222,19 +229,19 @@ import java.util.*;
 					//set up les deux dames
 					if (box.estOccupee() && box.getPiece() instanceof Dame){
 						if (box.getPiece().getColor()==1){
-							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][QUEEN]));
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KING]));
 						}
 						else{
-							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][QUEEN]));
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KING]));
 						}
 					}
 					//set up les deux rois
 					else if (box.estOccupee() && box.getPiece() instanceof Roi){
 						if (box.getPiece().getColor()==1){
-							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KING]));
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][QUEEN]));
 						}
 						else{
-							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KING]));
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][QUEEN]));
 						}
 					}
 					//set up les deux Cavaliers
@@ -320,52 +327,61 @@ import java.util.*;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//si aucune case n'est séléctionné on va séléctionner celle là et surligner la case sur le gui
-			if (caseMove[0]==null){
-				String coords = e.getActionCommand().replaceAll("\\s+","");
-				int x = Integer.parseInt(Character.toString(coords.charAt(0)));
-				int y = Integer.parseInt(Character.toString(coords.charAt(1)));
-				if (partie.getEchiquier().getCase(x,y).estOccupee() && partie.getEchiquier().getCase(x,y).getPiece().getColor()==partie.getJoueurCourant().getPlayerColor()){
-					caseMove = new Case[2];
-					caseMove[0] = partie.getEchiquier().getCase(x,y);
-					chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
-					for(int i=0;i<8;i++){
-						for(int j=0;j<8;j++){
-							if (partie.legalMove(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j), partie.getEchiquier())){
-								if(partie.moveMetEchec(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j))){
-									chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.RED);
-								}
-								else{
-									chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.BLUE);
+			if (finpartie==false){
+				//si aucune case n'est séléctionné on va séléctionner celle là et surligner la case sur le gui
+				if (caseMove[0]==null){
+					String coords = e.getActionCommand().replaceAll("\\s+","");
+					int x = Integer.parseInt(Character.toString(coords.charAt(0)));
+					int y = Integer.parseInt(Character.toString(coords.charAt(1)));
+					if (partie.getEchiquier().getCase(x,y).estOccupee() && partie.getEchiquier().getCase(x,y).getPiece().getColor()==partie.getJoueurCourant().getPlayerColor()){
+						caseMove = new Case[2];
+						caseMove[0] = partie.getEchiquier().getCase(x,y);
+						chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
+						for(int i=0;i<8;i++){
+							for(int j=0;j<8;j++){
+								if (partie.legalMove(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j), partie.getEchiquier())){
+									if(partie.moveMetEchec(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j))){
+										chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.RED);
+									}
+									else{
+										if(partie.getEchiquier().getCase(i,j).estOccupee()){
+											chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.GREEN);
+										}
+										else{
+											chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.BLUE);
+										}
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			//si une case est déja sélectionnée on va sélectionner celle là aussi si ce n'est pas la même que la première, la surligner puis essayer le mouvement
-			else if (caseMove[1]==null ){
-				String coords = e.getActionCommand().replaceAll("\\s+","");
-				int x = Integer.parseInt(Character.toString(coords.charAt(0)));
-				int y = Integer.parseInt(Character.toString(coords.charAt(1)));
-				if (caseMove[0]!=partie.getEchiquier().getCase(x,y)){
-					chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
-					caseMove[1] = partie.getEchiquier().getCase(x,y);
-					partie.move(caseMove[0], caseMove[1]);
-					historiqueMoves.add(new String(caseMove[0].getStringCase()+caseMove[1].getStringCase()));
-					caseMove=new Case[2];
-					setupBoard(partie.getEchiquier());
-					retablicCouleurCases();
-					panelHistorique.setText(toStringHistorique());
+				//si une case est déja sélectionnée on va sélectionner celle là aussi si ce n'est pas la même que la première, la surligner puis essayer le mouvement
+				else if (caseMove[1]==null ){
+					String coords = e.getActionCommand().replaceAll("\\s+","");
+					int x = Integer.parseInt(Character.toString(coords.charAt(0)));
+					int y = Integer.parseInt(Character.toString(coords.charAt(1)));
+					if (caseMove[0]!=partie.getEchiquier().getCase(x,y)){
+						chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
+						caseMove[1] = partie.getEchiquier().getCase(x,y);
+						if (partie.move(caseMove[0], caseMove[1])){
+							historiqueMoves.add(new String(caseMove[0].getStringCase()+caseMove[1].getStringCase()));
+							checkPartie();
+						}
+						caseMove=new Case[2];
+						setupBoard(partie.getEchiquier());
+						retablicCouleurCases();
+						panelHistorique.setText(toStringHistorique());
+					}
+					else{
+						caseMove=new Case[2];
+						retablicCouleurCases();
+					}
 				}
-				else{
+				else {
 					caseMove=new Case[2];
 					retablicCouleurCases();
 				}
-			}
-			else {
-				caseMove=new Case[2];
-				retablicCouleurCases();
 			}
 		}
 	}

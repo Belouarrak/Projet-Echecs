@@ -1,14 +1,12 @@
 import java.util.*;
 
 public class Joueur{
-  private ArrayList<Piece> pieces; //chaque joueur a une collection constituée de ses pièces
   private String nom;
   private int couleur;
 
   public Joueur(String name, int couleur){
     this.nom = name;
     this.couleur = couleur;
-    this.pieces = new ArrayList<Piece>();
   }
   public void setNom(String name){
     this.nom = name;
@@ -21,11 +19,5 @@ public class Joueur{
   }
   public int getPlayerColor(){
     return this.couleur;
-  }
-  public void addPiece(Piece pawn){
-    this.pieces.add(pawn);
-  }
-  public ArrayList<Piece> getPiecesJoueur(){
-    return this.pieces;
   }
 }
