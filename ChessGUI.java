@@ -192,7 +192,7 @@ import javax.imageio.ImageIO;
 	public void addChessListener(ActionListener listener) {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				chessBoardSquares[i][j].setActionCommand(j+ " " + i);
+				chessBoardSquares[i][j].setActionCommand(Math.abs(j-7)+ " " + i);
 				chessBoardSquares[i][j].addActionListener(listener);
 			}
 
