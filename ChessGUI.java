@@ -1,16 +1,44 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.net.URL;
-import javax.imageio.ImageIO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.print.attribute.standard.Media;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
 
 	public class ChessGUI extends JPanel {
 
@@ -26,13 +54,17 @@ import javax.swing.border.Border;
 	private JButton sauvegarder = new JButton("SAUVEGARDER");
 	private JButton precedent = new JButton("PREC");
 	private JButton abandon = new JButton("ABANDON");
+	private JButton stop = new JButton("STOP");
+	private JButton charger = new JButton("CHARGER");
 	private JButton nouvellePartie = new JButton("NOUVELLE PARTIE");
+	private JButton play = new JButton("PLAY");
 	private Partie partie;
 	private boolean playing = false;
 	private Case[] caseMove = new Case[2];
 	private ArrayList<String> historiqueMoves;
 	private JTextArea panelHistorique;
 	private boolean finpartie = false;
+	Clip clip;
 
 	ChessGUI() {
 		initializeGui();
@@ -71,17 +103,32 @@ import javax.swing.border.Border;
 		gui.add(scrollPane, BorderLayout.WEST);
 		this.nouvellePartie.addActionListener(new NouvellePartieListener());
 		tools.add(nouvellePartie);
-		tools.add(sauvegarder); // TODO - add functionality! POUR SAUVEGARDER
+		tools.add(charger);
+		tools.add(sauvegarder);// TODO - add functionality! POUR SAUVEGARDER
 		tools.add(precedent); // TODO - add functionality!$
 		tools.add(new JButton("SUIV")); // TODO - add functionality!
 		tools.addSeparator(); // SEPARER LES BOUTONS
-		tools.add(new JButton("ABANDON")); // TODO - add functionality!
+		tools.add(abandon); // TODO - add functionality!
+		tools.add(play);
+		tools.add(stop);
 		tools.addSeparator(); // AUTRE SEPARATION
 		tools.add(message); // MESSAGE EN STRING VERS LA DROITE
 
 		creerPanelEchiquier();
 		addChessListener();
 		addUndoListener();
+		try {
+			SimpleAudioPlayer();
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public final JComponent getGui() {
@@ -219,6 +266,27 @@ import javax.swing.border.Border;
 	    }
 	  }
 	}
+	
+
+			public void SimpleAudioPlayer() 
+			        throws UnsupportedAudioFileException, 
+			        IOException, LineUnavailableException  
+			    { 
+				    // current status of clip 
+				    AudioInputStream audioInputStream; 
+				    String filePath = "./sound/TT.wav"; 
+			        // create AudioInputStream object 
+			        audioInputStream =  AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());   
+			        // create clip reference 
+			        clip = AudioSystem.getClip(); 
+			        // open audioInputStream to the clip 
+			        clip.open(audioInputStream); 
+			          
+			        clip.loop(Clip.LOOP_CONTINUOUSLY); 
+			        clip.start();
+			    } 
+	      
+	
 
 	public void setupBoard(Echiquier echiquier) {
 		if (this.partie!=null){
@@ -320,7 +388,9 @@ import javax.swing.border.Border;
 	}
 	public void addUndoListener() {
 		sauvegarder.addActionListener(new UndoListener());
-		//precedent.addActionListener(undoListener);
+		precedent.addActionListener(new UndoListener());
+		stop.addActionListener(new UndoListener());
+		play.addActionListener(new UndoListener());
 	}
 //inner-class avec les Listener
 	class ButtonCaseListener implements ActionListener{
@@ -400,7 +470,14 @@ import javax.swing.border.Border;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(e.getActionCommand());
+			if (e.getActionCommand() == "STOP") {
+					clip.stop();
+			}
+			if (e.getActionCommand() == "PLAY") {
+				System.out.println(e.getActionCommand());
+				clip.start();
+			}
+			//System.out.println(e.getActionCommand());
 			//partie.undoGame();
 			//gui.undoGame();
 		}
