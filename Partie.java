@@ -1,4 +1,12 @@
 import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Partie{
   private Echiquier echiquier;
@@ -7,10 +15,17 @@ public class Partie{
   private Joueur joueurCourant;
   private Joueur joueurGagnant = null;
   private Scanner input;
+  private String[] abc = {"a","b","c","d","e","f","g","h"};
+  private List<String> listabc;
+  private String[] nums = {"1","2","3","4","5","6","7","8"};
+  private List<String> listnums;
+
 
   //initialiser la partie, le scanner et le joueur courant
   public Partie(){
     this.input = new Scanner(System.in);
+    this.listabc = Arrays.asList(this.abc);
+    this.listnums = Arrays.asList(this.nums);
     this.initialiserPartie();
     this.joueurCourant=this.blanc;
     System.out.println(this.getEchiquier().toString());
@@ -123,17 +138,22 @@ public class Partie{
   continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
   public Case[] entrerCoords() {
     String coords="";
-    String[] abc = {"a","b","c","d","e","f","g","h"};
-    List<String> listabc = Arrays.asList(abc);
-    String[] nums = {"1","2","3","4","5","6","7","8"};
-    List<String> listnums = Arrays.asList(nums);
     boolean bonformat=false;
     while (bonformat==false){
       //le texte est mis en minuscule et replaceAll va enlever tous les espaces (\\s+ = tous les espaces et charactères non-visibles)
       coords = this.input.nextLine().toLowerCase().replaceAll("\\s+","");
       if (coords.length()==4){
         //true si on a quatre charactères de format "lettre/chiffre/lettre/chiffre"
-        if (listabc.contains(coords.charAt(0)+"") && listnums.contains(coords.charAt(1)+"") && listabc.contains(coords.charAt(2)+"") && listnums.contains(coords.charAt(3)+"") ){
+        if (this.listabc.contains(coords.charAt(0)+"") && this.listnums.contains(coords.charAt(1)+"") && this.listabc.contains(coords.charAt(2)+"") && this.listnums.contains(coords.charAt(3)+"") ){
+          try { // SAUVEGARDER FICHIER
+           FileWriter fichierWrite = new FileWriter("Fichiertxt.txt", true); // Ecrire le fichier, le true permet d'append le fichier au lieu de créer un nouvel objet
+           BufferedWriter ecrire = new BufferedWriter(fichierWrite); // Stream chaining, de convention
+           ecrire.write(coords); // On écrit le contenu de la variable dans le fichier
+           ecrire.newLine(); // On passe à la ligne suivante
+           ecrire.close(); // On ferme le fichier pour éviter les problèmes de mémoire
+         }
+          catch (IOException Ex) {System.out.println(Ex.getMessage());}
+          this.echiquier.setNumTour(this.echiquier.getNumTour()+1); // On rajoute 1 pour garder le fil
           bonformat=true;
         }
       }
@@ -142,16 +162,19 @@ public class Partie{
         System.out.println("Veuillez entrer des cases valides. ");
       }
     }
+    return this.entrerCoords(coords);
+  }
+  public Case[] entrerCoords(String coords){
     //les lettres sontaprès cela convertis en coordonnées y1 et y2
     String y1string = ""+coords.charAt(0);
     String y2string = ""+coords.charAt(2);
     int y1=0;
     int y2=0;
-    for (int i = 0; i<abc.length; i++){
-      if (y1string.equals(abc[i])){
+    for (int i = 0; i<this.abc.length; i++){
+      if (y1string.equals(this.abc[i])){
         y1 = i;
       }
-      if (y2string.equals(abc[i])){
+      if (y2string.equals(this.abc[i])){
         y2 = i;
       }
     }
@@ -164,6 +187,21 @@ public class Partie{
     cases[1] = this.echiquier.getCase(x2,y2);
     return cases;
   }
+  public void chargerMoves(String file) throws Exception{
+    try{
+      BufferedReader ReadFileBuffer = new BufferedReader(new FileReader(file)); // Streaming chain, convention
+      String ligne = ReadFileBuffer.readLine().toLowerCase().replaceAll("\\s+","");
+      while (ligne!= null){
+        // read next line
+        Case[] cases = this.entrerCoords(ligne);
+        this.echiquier.bougerPiece(cases[0], cases[1]);
+        this.changerJoueurCourant();
+        ligne = ReadFileBuffer.readLine().toLowerCase().replaceAll("\\s+","");
+      }
+      ReadFileBuffer.close();
+    }
+    catch(Exception e){System.out.println(e);}
+   }
   //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
   //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
   public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr, Echiquier board){
@@ -218,7 +256,6 @@ public class Partie{
     if (this.estEnEchec(joueur, newBoard)){
       return true;
     }
-    System.out.println(newBoard.getCaseRoi(joueur).getStringCase());
     return false;
   }
   public boolean noLegalMovePossible(Joueur joueur, Echiquier board){
@@ -230,7 +267,6 @@ public class Partie{
             for(int x=0;x<8;x++){
               for(int y=0;y<8;y++){
                 if (this.moveMetEchec(joueur, board.getCase(i,j), board.getCase(x,y))==false){
-                  System.out.println("move pour lequel on sort de l'échec "+board.getCase(i,j).getStringCase()+ board.getCase(x,y).getStringCase());
                   return false;
                 }
               }
@@ -246,7 +282,7 @@ public class Partie{
     System.out.println("Effectuer un mouvement: ");
     Case[] cases = this.entrerCoords();
     while(this.legalMove(this.joueurCourant, cases[0], cases[1], this.echiquier)==false && this.moveMetEchec(this.joueurCourant, cases[0], cases[1])==true){
-      System.out.println("Veuillez entrer un mouvement valide.1");
+      System.out.println("Veuillez entrer un mouvement valide.");
       cases = this.entrerCoords();
     }
     this.echiquier.bougerPiece(cases[0], cases[1]);
@@ -308,20 +344,18 @@ public class Partie{
       System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.\nEffectuer un mouvement: ");
       //vérifier si le joueur est en échec
       if (this.estEnEchec(this.joueurCourant, this.echiquier)==true){
-        System.out.println("Je suis dans lancerPartie premier if, le joueur est en échec.");
         //vérifier si le joueur est en échecs et mat
         System.out.println("Verficiation noLegalMovePossible: "+ this.noLegalMovePossible(this.joueurCourant, this.echiquier));
         if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
           finpartie = true;
           this.joueurGagnant = this.joueurOppose(this.joueurCourant);
-          System.out.println("Partie terminée. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
+          System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
         }
         else{
           this.move();
         }
       }
       else{
-        System.out.println("Jsuis dans lancerPartie sur le premier else, le joueur est pas en echec");
         //vérifier si Pat
         if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
           finpartie = true;

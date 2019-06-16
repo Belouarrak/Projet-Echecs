@@ -52,6 +52,9 @@ public class Echiquier{
   public int getNumTour(){
     return this.numTour;
   }
+  public void setNumTour(int num){
+    this.numTour=num;
+  }
 
   //toString de l'échiquier simple pour le moment
   public String toString(){

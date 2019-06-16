@@ -14,7 +14,6 @@ public class Fou extends Piece{
     if(Math.abs(departX-arriveeX)==Math.abs(departY-arriveeY)){
       //diagonale haute-droite
       if(arriveeX-departX>0 && arriveeY-departY>0){
-        System.out.println("HAUTE DROITE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<arriveeX-departX; i++){
           if (board.getCase(departX+i, departY+i).estOccupee()){
@@ -25,7 +24,6 @@ public class Fou extends Piece{
       }
       //diagonale haute-gauche
       if(arriveeX-departX>0 && arriveeY-departY<0){
-        System.out.println("HAUTE GAUCHE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<arriveeX-departX; i++){
           if (board.getCase(departX+i, departY-i).estOccupee()){
@@ -36,10 +34,8 @@ public class Fou extends Piece{
       }
       //diagonale basse-droite
       if(arriveeX-departX<0 && arriveeY-departY>0){
-        System.out.println("BASSE DROITE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<departX-arriveeX; i++){
-          System.out.println(board.getCase(departX-i, departY+i).getStringCase());
           if (board.getCase(departX-i, departY+i).estOccupee()){
             return false;
           }
@@ -48,10 +44,8 @@ public class Fou extends Piece{
       }
       //diagonale basse-gauche
       if(arriveeX-departX<0 && arriveeY-departY<0){
-        System.out.println("BASSE GAUCHE");
         //regarde si il a une pièce sur le chemin
         for (int i=1; i<departX-arriveeX; i++){
-          System.out.println(board.getCase(departX-i, departY-i).getStringCase());
           if (board.getCase(departX-i, departY-i).estOccupee()){
             return false;
           }
