@@ -27,84 +27,61 @@ public class Partie{
     this.listabc = Arrays.asList(this.abc);
     this.listnums = Arrays.asList(this.nums);
     this.initialiserPartie();
-    this.joueurCourant=this.blanc;
-    System.out.println(this.getEchiquier().toString());
   };
   //Initialise les joueurs et l'échiquier
   public void initialiserPartie() {
-    System.out.println("Veuillez entrer le nom des joueurs: \nJoueur blanc: ");
-    String nameblanc = this.input.nextLine();
-    System.out.println("Joueur noir: ");
-    String namenoir = this.input.nextLine();
+
     this.setEchiquier(new Echiquier());
-    this.setJoueurBlanc(new Joueur(nameblanc,0));
-    this.setJoueurNoir(new Joueur(namenoir,1));
     //Création des Pions
     for(int j=0; j<8; j++){
       Pion pawnwhite = new Pion(0);
       Pion pawnblack = new Pion(1);
-      this.blanc.addPiece(pawnwhite);
       this.echiquier.getCase(1,j).occuperCase(pawnwhite);
-      this.noir.addPiece(pawnblack);
       this.echiquier.getCase(6,j).occuperCase(pawnblack);
     }
     //autres pièces blanches
       //les deux Tours blanches
     for(int i=0;i<2;i++){
       Tour tourwhite = new Tour(0);
-      this.blanc.addPiece(tourwhite);
       this.echiquier.getCase(0,7*i).occuperCase(tourwhite);
     }
       //les deux Cavaliers blancs
     Cavalier knightwhite1 = new Cavalier(0);
     Cavalier knightwhite2 = new Cavalier(0);
-    this.blanc.addPiece(knightwhite1);
     this.echiquier.getCase(0,1).occuperCase(knightwhite1);
-    this.blanc.addPiece(knightwhite2);
     this.echiquier.getCase(0,6).occuperCase(knightwhite2);
       //les deux Fous blancs
     Fou fouwhite1 = new Fou(0);
     Fou fouwhite2 = new Fou(0);
-    this.blanc.addPiece(fouwhite1);
     this.echiquier.getCase(0,2).occuperCase(fouwhite1);
-    this.blanc.addPiece(fouwhite2);
     this.echiquier.getCase(0,5).occuperCase(fouwhite2);
       //La Dame blanche
     Dame queenwhite = new Dame(0);
-    this.blanc.addPiece(queenwhite);
     this.echiquier.getCase(0,3).occuperCase(queenwhite);
       //Le Roi blanc
     Roi kingwhite = new Roi(0);
-    this.blanc.addPiece(kingwhite);
     this.echiquier.getCase(0,4).occuperCase(kingwhite);
     //autres pièces noires
       //les deux Tours blanches
     for(int i=0;i<2;i++){
       Tour tourblack = new Tour(1);
-      this.noir.addPiece(tourblack);
       this.echiquier.getCase(7,7*i).occuperCase(tourblack);
     }
       //les deux Cavaliers noirs
     Cavalier knightblack1 = new Cavalier(1);
     Cavalier knightblack2 = new Cavalier(1);
-    this.noir.addPiece(knightblack1);
     this.echiquier.getCase(7,1).occuperCase(knightblack1);
-    this.noir.addPiece(knightblack2);
     this.echiquier.getCase(7,6).occuperCase(knightblack2);
       //les deux Fous noirs
     Fou foublack1 = new Fou(1);
     Fou foublack2 = new Fou(1);
-    this.noir.addPiece(foublack1);
     this.echiquier.getCase(7,2).occuperCase(foublack1);
-    this.noir.addPiece(foublack2);
     this.echiquier.getCase(7,5).occuperCase(foublack2);
       //La Dame noire
     Dame queenblack = new Dame(1);
-    this.noir.addPiece(queenblack);
     this.echiquier.getCase(7,3).occuperCase(queenblack);
       //Le Roi noir
     Roi kingblack = new Roi(1);
-    this.noir.addPiece(kingblack);
     this.echiquier.getCase(7,4).occuperCase(kingblack);
 
   }
@@ -137,6 +114,15 @@ public class Partie{
   public Joueur getJoueurCourant(){
     return this.joueurCourant;
   }
+  public void setJoueurCourant(){
+    this.joueurCourant = this.blanc;
+  }
+  public void setJoueurGagnant(Joueur joueur){
+    this.joueurGagnant = joueur;
+  }
+  public Joueur getJoueurGagnant(){
+    return this.joueurGagnant;
+  }
   /*entrerCoords doit demander le mouvement de format "h4 b2" (par exemple), et va retourner les deux cases en question,
   continue de demander un bon format si les deux cases ne sont pas sur l'échiquier ou si le joueur met nimp*/
   public Case[] entrerCoords() {
@@ -159,10 +145,6 @@ public class Partie{
           this.echiquier.setNumTour(this.echiquier.getNumTour()+1); // On rajoute 1 pour garder le fil
           bonformat=true;
         }
-      }
-      //Sinon on va print:
-      else {
-        System.out.println("Veuillez entrer des cases valides. ");
       }
     }
     return this.entrerCoords(coords);
@@ -294,14 +276,16 @@ public class Partie{
       System.out.println(this.getEchiquier().toString());
     }
   }
-  public void move(Case caseDep, Case caseAr){
+  public boolean move(Case caseDep, Case caseAr){
     if (this.legalMove(this.joueurCourant, caseDep, caseAr, this.echiquier)==true && this.moveMetEchec(this.joueurCourant, caseDep, caseAr)==false){
       this.echiquier.bougerPiece(caseDep, caseAr);
       if (this.promouvoirPion(this.echiquier.getCase(caseAr.getX(), caseAr.getY()))){
         //System.out.println(this.getEchiquier().toString());
       }
       this.changerJoueurCourant();
+      return true;
     }
+    return false;
   }
   public boolean promouvoirPion(Case box){
     if (box.estOccupee() && box.getPiece().getColor()==this.joueurCourant.getPlayerColor() && box.getPiece() instanceof Pion){
