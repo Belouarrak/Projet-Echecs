@@ -3,13 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import java.net.URL;
 import javax.imageio.ImageIO;
 
-public class ChessGUI extends JFrame {
+	public class ChessGUI extends JPanel {
 
 	private final JPanel gui = new JPanel(new BorderLayout(3, 3)); // GUI
 	private JButton[][] chessBoardSquares = new JButton[8][8]; // 8X8 Jbutton
@@ -18,9 +17,7 @@ public class ChessGUI extends JFrame {
 	private final JLabel message = new JLabel("Chess Champ is ready to play!"); // JLABEL POUR ECHIQUIER
 	private static final String COLS = "ABCDEFGH"; // REPRESENTATION DE L'INTERFACE
 	public static final int QUEEN = 0, KING = 1, ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5; // PIECES VARIABLES
-	public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK // TABLEAU DE
-																										// PIECE
-	};
+	public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK };// TABLEAU DE PIECES
 	public static final int BLACK = 0, WHITE = 1; // VALEURS DES PIECES
 	private JButton sauvegarder = new JButton("SAUVEGARDER");
 	private JButton precedent = new JButton("PREC");
@@ -52,7 +49,7 @@ public class ChessGUI extends JFrame {
 		Action newGameAction = new AbstractAction("NOUVELLE PARTIE") { // NOUVEL ACTION LISTENER
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -75,7 +72,7 @@ public class ChessGUI extends JFrame {
 		echiquier = new JPanel(new GridLayout(0, 9)) {
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -160,8 +157,7 @@ public class ChessGUI extends JFrame {
 
 	private final void createImages() {
 		try {
-			URL url = new URL("http://i.stack.imgur.com/memI0.png");
-			BufferedImage bi = ImageIO.read(url);
+			BufferedImage bi = ImageIO.read(getClass().getResource("./img/pieces.png"));
 			for (int ii = 0; ii < 2; ii++) {
 				for (int jj = 0; jj < 6; jj++) {
 					chessPieceImages[ii][jj] = bi.getSubimage(jj * 64, ii * 64, 64, 64);
@@ -203,12 +199,12 @@ public class ChessGUI extends JFrame {
 
 		}
 	}
-	 
+
 
 	public void addUndoListener(ActionListener undoListener) {
 		sauvegarder.addActionListener(undoListener);
 		//precedent.addActionListener(undoListener);
 	}
 
-	
+
 }

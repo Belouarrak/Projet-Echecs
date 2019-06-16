@@ -5,11 +5,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class MainTests{
-	
+
   public static void main(String[] args){
 
-	  ChessGUI vue = new ChessGUI();
-
+	  	ChessGUI vue = new ChessGUI();
 			JFrame f = new JFrame("ChessChamp");
 			f.add(vue.getGui());
 			// Ensures JVM closes after frame(s) closed and
@@ -24,11 +23,11 @@ public class MainTests{
 			// ensures the minimum size is enforced.
 			f.setMinimumSize(f.getSize());
 			f.setVisible(true);
-	  
-			
-			
+
+
+
 	  Partie partie = new Partie();
-	  
+
 	  ChessController controller = new ChessController(partie, vue);
 	  vue.setVisible(true);
     /*try{
@@ -38,4 +37,3 @@ public class MainTests{
     catch(Exception e){System.out.println(e);}*/
   }
 }
-
