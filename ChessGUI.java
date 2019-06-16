@@ -8,13 +8,14 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 
 	public class ChessGUI extends JPanel {
 
 	private final JPanel gui = new JPanel(new BorderLayout(3, 3)); // GUI
 	private JButton[][] chessBoardSquares = new JButton[8][8]; // 8X8 Jbutton
 	private Image[][] chessPieceImages = new Image[2][6]; // IMAGE DE CHESSPIECE
-	private JPanel echiquier; // Echiquier
+	private JPanel echiquier, boardConstrain; // Echiquier
 	private final JLabel message = new JLabel("Chess Champ is ready to play!"); // JLABEL POUR ECHIQUIER
 	private static final String COLS = "ABCDEFGH"; // REPRESENTATION DE L'INTERFACE
 	public static final int QUEEN = 0, KING = 1, ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5; // PIECES VARIABLES
@@ -25,11 +26,15 @@ import java.awt.event.ActionListener;
 	private JButton abandon = new JButton("ABANDON");
 	private JButton nouvellePartie = new JButton("NOUVELLE PARTIE");
 	private Partie partie;
+	private boolean playing = false;
+	private Case[] caseMove = new Case[2];
+	private ArrayList<String> historiqueMoves;
+	private JTextArea panelHistorique;
 
 	ChessGUI() {
 		initializeGui();
-		this.partie = new Partie();
-		this.setupBoard(partie.getEchiquier());
+		this.partie = null;
+		//this.setupBoard(partie.getEchiquier());
 	}
 
 	public final void initializeGui() {
@@ -44,11 +49,14 @@ import java.awt.event.ActionListener;
 		String i = "FALSE";
 		JLabel echec = new JLabel("ECHEC =   " + i);
 		JLabel echecmat = new JLabel("ECHEC ET MAT =  " + i);
+		this.panelHistorique = new JTextArea();
+		this.panelHistorique.setEditable(false);
 		echec.setVerticalAlignment(JLabel.TOP);
 		echecmat.setVerticalAlignment(JLabel.TOP);
 		info.add(echec, BorderLayout.EAST);
 		info.add(echecmat, BorderLayout.EAST);
 		gui.add(info, BorderLayout.EAST);
+		gui.add(this.panelHistorique, BorderLayout.EAST);
 		this.nouvellePartie.addActionListener(new NouvellePartieListener());
 		tools.add(nouvellePartie);
 		tools.add(sauvegarder); // TODO - add functionality! POUR SAUVEGARDER
@@ -98,10 +106,10 @@ import java.awt.event.ActionListener;
 		// Set the BG to be ochre
 		Color ochre = new Color(240, 240, 240);
 		echiquier.setBackground(ochre);
-		JPanel boardConstrain = new JPanel(new GridBagLayout());
-		boardConstrain.setBackground(ochre);
-		boardConstrain.add(echiquier);
-		gui.add(boardConstrain);
+		this.boardConstrain = new JPanel(new GridBagLayout());
+		this.boardConstrain.setBackground(ochre);
+		this.boardConstrain.add(echiquier);
+		gui.add(this.boardConstrain);
 
 		// create the chess board squares
 		Insets buttonMargin = new Insets(0, 0, 0, 0);
@@ -157,85 +165,117 @@ import java.awt.event.ActionListener;
 			System.exit(1);
 		}
 	}
-
+	public String toStringHistorique(){
+		String historique = "";
+		for (int i=0; i<this.historiqueMoves.size(); i++){
+			historique+=this.historiqueMoves.get(i)+"\n";
+		}
+		return historique;
+	}
 	public void newGame(){
 		this.partie = new Partie();
-		this.play();
+		this.historiqueMoves = new ArrayList<String>();
+		setupBoard(this.partie.getEchiquier());
 	}
+	//public void playMove()
 
-	public void play(){
-		boolean finpartie = false;
-		while(!finpartie){
-			finpartie = this.partie.lancerPartie();
+	/*public void play(){
+
+		if
+			//System.out.println("C'est au tour de "+this.joueurCourant.getNom()+" de jouer.");
+      //vérifier si le joueur est en échec
+      if (this.partie.estEnEchec(this.joueurCourant, this.echiquier)==true){
+        //vérifier si le joueur est en échecs et mat
+        if (this.partie.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+          finpartie = true;
+          this.joueurGagnant = this.joueurOppose(this.joueurCourant);
+          //System.out.println("Partie terminee. Le gagnant de la partie est "+this.joueurGagnant.getNom()+"!!!");
+        }
+        else{
+          this.move();
+        }
+      }
+      else{
+        //vérifier si Pat
+        if (this.noLegalMovePossible(this.joueurCourant, this.echiquier)==true){
+          finpartie = true;
+          //System.out.println("Vous avez atteint un Pat, personne ne gagne.");
+        }
+        else{
+          this.move();
+        }
+      }
+      this.changerJoueurCourant();
+    }
 			System.out.println("AVANT DE REFRESH"+this.partie.getEchiquier().toString());
 			setupBoard(this.partie.getEchiquier());
-
-			System.out.println(finpartie);
 		}
-	}
+	}*/
 
 	public void setupBoard(Echiquier echiquier) {
-		message.setText("Make your move!");
-		// set up les pieces
-		for (int i = 0; i<8;i++) {
-			for(int j = 0; j<8; j++){
-				Case box = echiquier.getCase(Math.abs(j-7), i);
-				//set up les deux dames
-				if (box.estOccupee() && box.getPiece() instanceof Dame){
-					if (box.getPiece().getColor()==1){
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][QUEEN]));
+		if (this.partie!=null){
+			message.setText("Make your move!");
+			// set up les pieces
+			for (int i = 0; i<8;i++) {
+				for(int j = 0; j<8; j++){
+					Case box = echiquier.getCase(Math.abs(j-7), i);
+					//set up les deux dames
+					if (box.estOccupee() && box.getPiece() instanceof Dame){
+						if (box.getPiece().getColor()==1){
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][QUEEN]));
+						}
+						else{
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][QUEEN]));
+						}
 					}
-					else{
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][QUEEN]));
+					//set up les deux rois
+					else if (box.estOccupee() && box.getPiece() instanceof Roi){
+						if (box.getPiece().getColor()==1){
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KING]));
+						}
+						else{
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KING]));
+						}
 					}
-				}
-				//set up les deux rois
-				else if (box.estOccupee() && box.getPiece() instanceof Roi){
-					if (box.getPiece().getColor()==1){
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KING]));
+					//set up les deux Cavaliers
+					else if (box.estOccupee() && box.getPiece() instanceof Cavalier){
+						if (box.getPiece().getColor()==1){
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KNIGHT]));
+						}
+						else{
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KNIGHT]));
+						}
 					}
-					else{
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KING]));
+					//set up les deux Fous
+					else if (box.estOccupee() && box.getPiece() instanceof Fou){
+						if (box.getPiece().getColor()==1){
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][BISHOP]));
+						}
+						else{
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][BISHOP]));
+						}
 					}
-				}
-				//set up les deux Cavaliers
-				else if (box.estOccupee() && box.getPiece() instanceof Cavalier){
-					if (box.getPiece().getColor()==1){
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KNIGHT]));
+					//set up les deux Tours
+					else if (box.estOccupee() && box.getPiece() instanceof Tour){
+						if (box.getPiece().getColor()==1){
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][ROOK]));
+						}
+						else{
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][ROOK]));
+						}
 					}
-					else{
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KNIGHT]));
+					//set up les Pions
+					else if (box.estOccupee() && box.getPiece() instanceof Pion){
+						if (box.getPiece().getColor()==1){
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][PAWN]));
+						}
+						else{
+							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][PAWN]));
+						}
 					}
-				}
-				//set up les deux Fous
-				else if (box.estOccupee() && box.getPiece() instanceof Fou){
-					if (box.getPiece().getColor()==1){
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][BISHOP]));
+					else {
+						chessBoardSquares[i][j].setIcon(null);
 					}
-					else{
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][BISHOP]));
-					}
-				}
-				//set up les deux Tours
-				else if (box.estOccupee() && box.getPiece() instanceof Tour){
-					if (box.getPiece().getColor()==1){
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][ROOK]));
-					}
-					else{
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][ROOK]));
-					}
-				}
-				//set up les Pions
-				else if (box.estOccupee() && box.getPiece() instanceof Pion){
-					if (box.getPiece().getColor()==1){
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][PAWN]));
-					}
-					else{
-						chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][PAWN]));
-					}
-				}
-				else {
-					chessBoardSquares[i][j].setIcon(null);
 				}
 			}
 		}
@@ -244,22 +284,89 @@ import java.awt.event.ActionListener;
 	public void addChessListener() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				chessBoardSquares[i][j].setActionCommand(Math.abs(j-7)+ " " + i);
-				chessBoardSquares[i][j].addActionListener(new ButtonListener());
+				chessBoardSquares[i][j].setActionCommand(Math.abs(j-7)+" "+ i);
+				chessBoardSquares[i][j].addActionListener(new ButtonCaseListener());
 			}
 		}
 	}
-
+	public void retablicCouleurCases(){
+		Color ochre = new Color(240, 240, 240);
+		this.echiquier.setBackground(ochre);
+		this.boardConstrain.setBackground(ochre);
+		for (int ii = 0; ii < chessBoardSquares.length; ii++) {
+			for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
+				JButton b = chessBoardSquares[jj][ii];
+				// our chess pieces are 64x64 px in size, so we'll
+				// 'fill this in' using a transparent icon..
+				ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+				b.setIcon(icon);
+				if ((jj % 2 == 1 && ii % 2 == 1)
+						// ) {
+						|| (jj % 2 == 0 && ii % 2 == 0)) {
+					b.setBackground(Color.WHITE);
+				} else {
+					b.setBackground(Color.BLACK);
+				}
+			}
+		}
+		setupBoard(partie.getEchiquier());
+	}
 	public void addUndoListener() {
 		sauvegarder.addActionListener(new UndoListener());
 		//precedent.addActionListener(undoListener);
 	}
 //inner-class avec les Listener
-	class ButtonListener implements ActionListener{
+	class ButtonCaseListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(e.getActionCommand());
+			//si aucune case n'est séléctionné on va séléctionner celle là et surligner la case sur le gui
+			if (caseMove[0]==null){
+				String coords = e.getActionCommand().replaceAll("\\s+","");
+				int x = Integer.parseInt(Character.toString(coords.charAt(0)));
+				int y = Integer.parseInt(Character.toString(coords.charAt(1)));
+				if (partie.getEchiquier().getCase(x,y).estOccupee() && partie.getEchiquier().getCase(x,y).getPiece().getColor()==partie.getJoueurCourant().getPlayerColor()){
+					caseMove = new Case[2];
+					caseMove[0] = partie.getEchiquier().getCase(x,y);
+					chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
+					for(int i=0;i<8;i++){
+						for(int j=0;j<8;j++){
+							if (partie.legalMove(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j), partie.getEchiquier())){
+								if(partie.moveMetEchec(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j))){
+									chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.RED);
+								}
+								else{
+									chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.BLUE);
+								}
+							}
+						}
+					}
+				}
+			}
+			//si une case est déja sélectionnée on va sélectionner celle là aussi si ce n'est pas la même que la première, la surligner puis essayer le mouvement
+			else if (caseMove[1]==null ){
+				String coords = e.getActionCommand().replaceAll("\\s+","");
+				int x = Integer.parseInt(Character.toString(coords.charAt(0)));
+				int y = Integer.parseInt(Character.toString(coords.charAt(1)));
+				if (caseMove[0]!=partie.getEchiquier().getCase(x,y)){
+					chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
+					caseMove[1] = partie.getEchiquier().getCase(x,y);
+					partie.move(caseMove[0], caseMove[1]);
+					historiqueMoves.add(new String(caseMove[0].getStringCase()+caseMove[1].getStringCase()));
+					caseMove=new Case[2];
+					setupBoard(partie.getEchiquier());
+					retablicCouleurCases();
+					panelHistorique.setText(toStringHistorique());
+				}
+				else{
+					caseMove=new Case[2];
+					retablicCouleurCases();
+				}
+			}
+			else {
+				caseMove=new Case[2];
+				retablicCouleurCases();
+			}
 		}
 	}
 	class NouvellePartieListener implements ActionListener{ // NOUVEL ACTION LISTENER
