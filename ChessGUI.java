@@ -196,6 +196,7 @@ import javax.swing.border.Border;
 		this.historiqueMoves = new ArrayList<String>();
 		this.panelHistorique.setText(toStringHistorique());
 		setupBoard(this.partie.getEchiquier());
+		this.message.setText("C'est au tour de "+this.partie.getJoueurCourant().getNom()+" de jouer.");
 	}
 	//public void playMove()
 
@@ -287,7 +288,49 @@ import javax.swing.border.Border;
 			}
 		}
 	}
-
+	public void choisirPromotion(int color, Case box){
+		JOptionPane jop = new JOptionPane();
+    jop.showMessageDialog(this, "Dame: 'D', Fou: 'F', Tour: 'T', Cavalier: 'C'. Entrer la nature de la nouvelle pièce.");
+    String nature = "";
+    boolean prom = false;
+    while(!prom ){
+      nature=jop.showInputDialog("Veuillez entrer une lettre correspondant à une piece valide");
+      if (nature.equals("D")){
+        Dame piece = new Dame(color);
+        box.enleverPiece();
+        box.occuperCase(piece);
+        prom = true;
+      }
+      else if (nature.equals("F")){
+        Fou piece = new Fou(color);
+        box.enleverPiece();
+        box.occuperCase(piece);
+        prom = true;
+      }
+      else if (nature.equals("T")){
+        Tour piece = new Tour(color);
+        box.enleverPiece();
+        box.occuperCase(piece);
+        prom = true;
+      }
+      else if (nature.equals("C")){
+        Cavalier piece = new Cavalier(color);
+        box.enleverPiece();
+        box.occuperCase(piece);
+        prom = true;
+      }
+			else if (nature == null || "".equals(nature)){
+				System.out.println("Cancel appuye");
+				nature = "";
+				prom = false;
+			}
+    }
+		if (!prom){
+			Dame piece = new Dame(color);
+			box.enleverPiece();
+			box.occuperCase(piece);
+		}
+  }
 	public void addChessListener() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -357,7 +400,7 @@ import javax.swing.border.Border;
 					}
 				}
 				//si une case est déja sélectionnée on va sélectionner celle là aussi si ce n'est pas la même que la première, la surligner puis essayer le mouvement
-				else if (caseMove[1]==null ){
+				else if (caseMove[1]==null && caseMove[0]!=null){
 					String coords = e.getActionCommand().replaceAll("\\s+","");
 					int x = Integer.parseInt(Character.toString(coords.charAt(0)));
 					int y = Integer.parseInt(Character.toString(coords.charAt(1)));
@@ -365,12 +408,45 @@ import javax.swing.border.Border;
 						chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
 						caseMove[1] = partie.getEchiquier().getCase(x,y);
 						if (partie.move(caseMove[0], caseMove[1])){
+							if (partie.promouvoirPion(partie.getEchiquier().getCase(caseMove[1].getX(), caseMove[1].getY()))){
+								choisirPromotion(partie.getJoueurCourant().getPlayerColor(), partie.getEchiquier().getCase(caseMove[1].getX(), caseMove[1].getY()));
+								setupBoard(partie.getEchiquier());
+							}
+							partie.changerJoueurCourant();
+							retablicCouleurCases();
 							historiqueMoves.add(new String(caseMove[0].getStringCase()+caseMove[1].getStringCase()));
+							caseMove[0]=null;
+							caseMove[1]=null;
 							checkPartie();
 						}
-						caseMove=new Case[2];
+						else if (partie.getEchiquier().getCase(x,y).getPiece()!=null && partie.getEchiquier().getCase(x,y).getPiece().getColor()==partie.getJoueurCourant().getPlayerColor()){
+							caseMove[0]=partie.getEchiquier().getCase(x,y);
+							caseMove[1]=null;
+							retablicCouleurCases();
+							chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
+							for(int i=0;i<8;i++){
+								for(int j=0;j<8;j++){
+									if (partie.legalMove(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j), partie.getEchiquier())){
+										if(partie.moveMetEchec(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j))){
+											chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.RED);
+										}
+										else{
+											if(partie.getEchiquier().getCase(i,j).estOccupee()){
+												chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.GREEN);
+											}
+											else{
+												chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.BLUE);
+											}
+										}
+									}
+								}
+							}
+						}
+						else{
+							caseMove=new Case[2];
+							retablicCouleurCases();
+						}
 						setupBoard(partie.getEchiquier());
-						retablicCouleurCases();
 						panelHistorique.setText(toStringHistorique());
 					}
 					else{
