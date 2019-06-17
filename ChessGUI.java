@@ -35,6 +35,14 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 
 public class ChessGUI extends JPanel {
 
@@ -471,7 +479,7 @@ public class ChessGUI extends JPanel {
 							}
 							partie.changerJoueurCourant();
 							retablicCouleurCases();
-							historiqueMoves.add(new String(caseMove[0].getStringCase()+caseMove[1].getStringCase()));
+							historiqueMoves.add(new String(caseMove[0].getStringCase().trim()+caseMove[1].getStringCase().trim()));
 							caseMove[0]=null;
 							caseMove[1]=null;
 							checkPartie();
@@ -555,16 +563,32 @@ public class ChessGUI extends JPanel {
 			}
 			if (e.getActionCommand() == "CHARGER") {
 				try {
-					partie.chargerMoves("./Fichiertxt.txt");
+					JOptionPane jOp = new JOptionPane();
+					String fichier = jOp.showInputDialog("Veuillez entrer le nom du fichier a charger.");
+					partie.chargerMoves(fichier);
 					setupBoard(partie.getEchiquier());
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
-			// System.out.println(e.getActionCommand());
-			// partie.undoGame();
-			// gui.undoGame();
+			if (e.getActionCommand() == "SAUVEGARDER") {
+				if (partie!=null){
+					try { // SAUVEGARDER FICHIER
+						JOptionPane jOp = new JOptionPane();
+						String fichier = jOp.showInputDialog("Veuillez entrer le nom du fichier dans lequel sauvegarder (avec '.txt').");
+	         	FileWriter fichierWrite = new FileWriter(fichier, true); // Ecrire le fichier, le true permet d'append le fichier au lieu de créer un nouvel objet
+	         	BufferedWriter ecrire = new BufferedWriter(fichierWrite); // Stream chaining, de convention*
+						ecrire.write(historiqueMoves.get(0));
+						for(int i = 1; i<historiqueMoves.size();i++){
+							ecrire.newLine(); // On passe à la ligne suivante
+							ecrire.write(historiqueMoves.get(i)); // On écrit le contenu de la variable dans le fichier
+						}
+	         	ecrire.close(); // On ferme le fichier pour éviter les problèmes de mémoire
+					}
+	        catch (IOException Ex) {System.out.println(Ex.getMessage());}
+				}
+			}
 		}
 	}
 }
