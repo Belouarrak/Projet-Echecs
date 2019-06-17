@@ -172,7 +172,7 @@ public class Partie{
     cases[1] = this.echiquier.getCase(x2,y2);
     return cases;
   }
-  
+
   /*
    * public void ChargerPartie() throws Exception
   {
@@ -180,21 +180,21 @@ public class Partie{
       BufferedReader ReadFileBuffer = new BufferedReader(fichierRead); // Streaming chain, convention
       String ligne = "1";
 
-  
+
 	while ((ligne = ReadFileBuffer.readLine()) != null)
       {
 			// read next line
 			coords = ligne;
 			System.out.println(ligne);
 			entrerCoords(coords);
-      } 
+      }
       ReadFileBuffer.close();
    }
    */
-  
+
   public void chargerMoves(String file) throws Exception{
     try{
-    	
+
       BufferedReader ReadFileBuffer = new BufferedReader(new FileReader(file)); // Streaming chain, convention
       String ligne = "1";
       while ((ligne = ReadFileBuffer.readLine()) != null){
@@ -209,7 +209,7 @@ public class Partie{
     }
     catch(Exception e){System.out.println(e + " mdr");}
    }
-  
+
   //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
   //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
   public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr, Echiquier board){
