@@ -231,13 +231,10 @@ import javax.swing.border.LineBorder;
 		}
 		return historique;
 	}
-	public void newGame(){
+	public void newGame(String blanc, String noir){
 		this.partie = new Partie();
-		JOptionPane jOp = new JOptionPane();
-    String nomblanc = jOp.showInputDialog("A qui sont les pieces blanches?");
-		this.partie.setJoueurBlanc(new Joueur(nomblanc,0));
-		String nomnoir = jOp.showInputDialog("A qui sont les pieces noires?");
-		this.partie.setJoueurNoir(new Joueur(nomnoir,1));
+		this.partie.setJoueurBlanc(new Joueur(blanc,0));
+		this.partie.setJoueurNoir(new Joueur(noir,1));
 		this.partie.setJoueurCourant();
 		this.finpartie=false;
 		this.historiqueMoves = new ArrayList<String>();
@@ -252,6 +249,7 @@ import javax.swing.border.LineBorder;
 	  //vérifier si le joueur est en échec
 		JOptionPane jop = new JOptionPane();
 	  if (this.partie.estEnEchec(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
+			this.message.setText(this.partie.getJoueurCourant().getNom()+" est en echec.");
 	    //vérifier si le joueur est en échecs et mat
 	    if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
 				this.finpartie = true;
@@ -267,27 +265,27 @@ import javax.swing.border.LineBorder;
 	    }
 	  }
 	}
-	
 
-			public void SimpleAudioPlayer() 
-			        throws UnsupportedAudioFileException, 
-			        IOException, LineUnavailableException  
-			    { 
-				    // current status of clip 
-				    AudioInputStream audioInputStream; 
-				    String filePath = "./sound/TT.wav"; 
-			        // create AudioInputStream object 
-			        audioInputStream =  AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());   
-			        // create clip reference 
-			        clip = AudioSystem.getClip(); 
-			        // open audioInputStream to the clip 
-			        clip.open(audioInputStream); 
-			          
-			        clip.loop(Clip.LOOP_CONTINUOUSLY); 
+
+			public void SimpleAudioPlayer()
+			        throws UnsupportedAudioFileException,
+			        IOException, LineUnavailableException
+			    {
+				    // current status of clip
+				    AudioInputStream audioInputStream;
+				    String filePath = "./sound/TT.wav";
+			        // create AudioInputStream object
+			        audioInputStream =  AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+			        // create clip reference
+			        clip = AudioSystem.getClip();
+			        // open audioInputStream to the clip
+			        clip.open(audioInputStream);
+
+			        clip.loop(Clip.LOOP_CONTINUOUSLY);
 			        clip.start();
-			    } 
-	      
-	
+			    }
+
+
 
 	public void setupBoard(Echiquier echiquier) {
 		if (this.partie!=null){
@@ -357,46 +355,40 @@ import javax.swing.border.LineBorder;
 		}
 	}
 	public void choisirPromotion(int color, Case box){
-		JOptionPane jop = new JOptionPane();
-    jop.showMessageDialog(this, "Dame: 'D', Fou: 'F', Tour: 'T', Cavalier: 'C'. Entrer la nature de la nouvelle pièce.");
-    String nature = "";
-    boolean prom = false;
-    while(!prom ){
-      nature=jop.showInputDialog("Veuillez entrer une lettre correspondant à une piece valide");
-      if (nature.equals("D")){
-        Dame piece = new Dame(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-      else if (nature.equals("F")){
-        Fou piece = new Fou(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-      else if (nature.equals("T")){
-        Tour piece = new Tour(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-      else if (nature.equals("C")){
-        Cavalier piece = new Cavalier(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-			else if (nature == null || "".equals(nature)){
-				System.out.println("Cancel appuye");
-				nature = "";
+		Object[] possibilities = {"Dame", "Fou", "Tour", "Cavalier"};
+		boolean prom = false;
+		while(!prom ){
+		String s = (String)JOptionPane.showInputDialog(this,"Veuillez choisir la nature de la piece nouvellement promue.", "Promotion du pion de "+this.partie.getJoueurCourant().getNom(),JOptionPane.PLAIN_MESSAGE,null,possibilities,"Dam");
+		if ((s != null) && (s.length() > 0)) {
+			if (s.equals("Dame")){
+				Dame piece = new Dame(color);
+				box.enleverPiece();
+				box.occuperCase(piece);
+				prom = true;
+			}
+			else if (s.equals("Fou")){
+				Fou piece = new Fou(color);
+				box.enleverPiece();
+				box.occuperCase(piece);
+				prom = true;
+			}
+			else if (s.equals("Tour")){
+				Tour piece = new Tour(color);
+				box.enleverPiece();
+				box.occuperCase(piece);
+				prom = true;
+			}
+			else if (s.equals("Cavalier")){
+				Cavalier piece = new Cavalier(color);
+				box.enleverPiece();
+				box.occuperCase(piece);
+				prom = true;
+			}
+		}
+			else {
+				s = "";
 				prom = false;
 			}
-    }
-		if (!prom){
-			Dame piece = new Dame(color);
-			box.enleverPiece();
-			box.occuperCase(piece);
 		}
   }
 	public void addChessListener() {
@@ -535,14 +527,28 @@ import javax.swing.border.LineBorder;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			Object[] options = {"Oui, allons-y", "Je me suis trompe mdr"};
+			int reponse = JOptionPane.showOptionDialog(null, "Voulez-vous creer une nouvelle partie?\nVous perdrez votre progression si vous jouiez une partie non sauvegardee. ", "Lancer une nouvelle partie",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 			//boolean finpartie = false;
-			newGame();
- 			// A VOIR
+			if (reponse==JOptionPane.YES_OPTION){
+				boolean bon = false;
+				JOptionPane jOp = new JOptionPane();
+				while (!bon){
+					String nomblanc = jOp.showInputDialog("A qui sont les pieces blanches?");
+					String nomnoir = jOp.showInputDialog("A qui sont les pieces noires?");
+					if (((nomblanc != null) && (nomblanc.length() > 0)) && ((nomnoir != null) && (nomnoir.length() > 0)))  {
+						newGame(nomblanc, nomnoir);
+						bon = true;
+					}
+					else{
+						jOp.showMessageDialog(gui,"Veuillez entre les noms des deux joueurs!");
+						bon = false;
+					}
+				}
+			}
 		}
-
-	};
-	class UndoListener implements ActionListener
-	{
+	}
+	class UndoListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
