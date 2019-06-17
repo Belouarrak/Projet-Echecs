@@ -37,23 +37,28 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 public class IHMechec extends JPanel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L; //SERIAL NECESSAIRE
 	private final JPanel echecPanel = new JPanel(new BorderLayout(3, 3)); // GUI
 	private JButton[][] carresEchiquier = new JButton[8][8]; // TABLEAU DE BOUTONS REPRESENTANT L'ECHIQUIER GRAPHIQUE QU'ON ASSOCIERA AVEC DES LISTENERS = PLUS EFFICACE QUE 64 BOUTONS
-	
+
 	private JLabel message = new JLabel("Appuyez sur Nouvelle Partie !"); // JLABEL POUR ECHIQUIER
 	private static final String COLS = "ABCDEFGH"; // REPRESENTATION DE L'INTERFACE
 	public static final int REINE = 0, ROI = 1, TOUR = 2, CHEVALIER = 3, FOU = 4, PION = 5; // PIECES VARIABLES POUR INSERER BOUTONS
-																										
+
 	private Image[][] imageEchiquier = new Image[2][6]; // IMAGE DE CHESSPIECE A INSERER DE SUBDIVISION SUR UNE IMAGE COMPOSE DE 64x64 SOUS-IMAGES REPRESENTANT LES ICONES DE PIECES
 	private JButton sauvegarder = new JButton("SAUVEGARDER"); // BOUTON SAUVEGARDER
-	private JButton precedent = new JButton("PREC"); // BOUTON PRECEDENT
+	//private JButton precedent = new JButton("PREC"); // BOUTON PRECEDENT
 	private JButton abandon = new JButton("ABANDON"); // BOUTON ABANDON
 	private JButton stop = new JButton("STOP"); // BOUTON STOP
 	private JButton charger = new JButton("CHARGER"); // BOUTON CHARGER
@@ -102,9 +107,9 @@ public class IHMechec extends JPanel {
 		menuFlottant.add(charger);
 		menuFlottant.add(sauvegarder);
 		menuFlottant.addSeparator();
-		menuFlottant.add(precedent);
-		menuFlottant.add(new JButton("SUIV"));
-		menuFlottant.addSeparator();
+	//	menuFlottant.add(precedent);
+	//	menuFlottant.add(new JButton("SUIV"));
+	//	menuFlottant.addSeparator();
 		menuFlottant.add(abandon);
 		menuFlottant.addSeparator(); // SEPARER LES BOUTONS
 		menuFlottant.add(play);
@@ -126,7 +131,7 @@ public class IHMechec extends JPanel {
 		this.echiquier = new JPanel(new GridLayout(0, 9)) {
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;};
 		echiquier.setBorder(new CompoundBorder(new EmptyBorder(50, 50, 50, 50), new LineBorder(Color.BLACK))); //
@@ -156,12 +161,12 @@ public class IHMechec extends JPanel {
 			}
 		}
 
-	
+
 		echiquier.add(new JLabel(""));
 
 		for (int ii = 0; ii < 8; ii++) {
 			echiquier.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));}
-		
+
 		for (int ii = 0; ii < 8; ii++) {
 			for (int jj = 0; jj < 8; jj++) {
 				switch (jj) {
@@ -205,7 +210,7 @@ public class IHMechec extends JPanel {
 		this.panelHistorique.setText(toStringHistorique());
 		setupBoard(this.partie.getEchiquier()); // RAFRAICHIT L'ECHIQUIER
 		this.message.setText("C'est au tour de " + this.partie.getJoueurCourant().getNom() + " de jouer.");
-		
+
 		try {
 			SimpleAudioPlayer("./sound/TT.wav");
 		} catch (UnsupportedAudioFileException e) {
@@ -221,6 +226,7 @@ public class IHMechec extends JPanel {
 		this.message.setText("C'est au tour de " + this.partie.getJoueurCourant().getNom() + " de jouer.");
 		if (this.partie.estEnEchec(this.partie.getJoueurCourant(), this.partie.getEchiquier()) == true) {
 			this.message.setText(this.partie.getJoueurCourant().getNom() + " est en echec.");
+			this.carresEchiquier[this.partie.getEchiquier().getCaseRoi(partie.getJoueurCourant()).getY()][Math.abs(this.partie.getEchiquier().getCaseRoi(partie.getJoueurCourant()).getX() - 7)].setBackground(Color.ORANGE);
 			// vérifier si le joueur est en échecs et mat
 			if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier()) == true) {
 				this.finpartie = true;
@@ -242,7 +248,7 @@ public class IHMechec extends JPanel {
 				}
 				JOptionPane.showMessageDialog(this, "Partie terminee. Le gagnant de la partie est "
 						+ this.partie.getJoueurGagnant().getNom() + "!!!");
-				
+
 			}
 		} else {
 			// vérifier si Pat
@@ -393,7 +399,7 @@ public class IHMechec extends JPanel {
 	public void addUndoListener() {
 		charger.addActionListener(new UndoListener());
 		sauvegarder.addActionListener(new UndoListener());
-		precedent.addActionListener(new UndoListener());
+		//precedent.addActionListener(new UndoListener());
 		stop.addActionListener(new UndoListener());
 		play.addActionListener(new UndoListener());
 		abandon.addActionListener(new UndoListener());
@@ -503,7 +509,7 @@ public class IHMechec extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Object[] options = { "Oui, allons-y", "Je me suis trompé" };
+			Object[] options = { "Oui, allons-y", "Je me suis trompe" };
 			int reponse = JOptionPane.showOptionDialog(null,
 					"Voulez-vous creer une nouvelle partie?\nVous perdrez votre progression si vous jouiez une partie non sauvegardee. ",
 					"Lancer une nouvelle partie", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -541,9 +547,22 @@ public class IHMechec extends JPanel {
 			if (e.getActionCommand() == "CHARGER") {
 				try {
 					String fichier = JOptionPane.showInputDialog("Veuillez entrer le nom du fichier a charger.");
+					newGame("Joueur 1","Joueur 2");
 					partie.chargerMoves(fichier);
+					BufferedReader ReadFileBuffer = new BufferedReader(new FileReader(fichier)); // Streaming chain, convention
+					String ligne = "1";
+					historiqueMoves = new ArrayList<String>();
+					while ((ligne = ReadFileBuffer.readLine()) != null) {
+						ligne = ligne.toLowerCase().trim();
+						historiqueMoves.add(new String(ligne));
+						// read next line
+					}
+					ReadFileBuffer.close();
+					panelHistorique.setText(toStringHistorique());
 					setupBoard(partie.getEchiquier());
-				} catch (Exception e1) {
+					checkPartie();
+				}
+		 		catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -553,6 +572,8 @@ public class IHMechec extends JPanel {
 					try { // SAUVEGARDER FICHIER
 						String fichier = JOptionPane.showInputDialog(
 								"Veuillez entrer le nom du fichier dans lequel sauvegarder (avec '.txt').");
+						PrintWriter pw = new PrintWriter(fichier);
+						pw.close();
 						FileWriter fichierWrite = new FileWriter(fichier, true); // Ecrire le fichier, le true permet
 																					// d'append le fichier au lieu de
 																					// créer un nouvel objet

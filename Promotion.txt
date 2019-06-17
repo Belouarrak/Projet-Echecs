@@ -1,0 +1,8 @@
+a2a4
+d7d5
+a4a5
+d5d4
+a5a6
+d4d3
+a6b7
+d3c2
