@@ -99,12 +99,15 @@ public class ChessGUI extends JPanel {
 		gui.add(scrollPane, BorderLayout.WEST);
 		this.nouvellePartie.addActionListener(new NouvellePartieListener());
 		tools.add(nouvellePartie);
+		tools.addSeparator();
 		tools.add(charger);
-		tools.add(sauvegarder);// TODO - add functionality! POUR SAUVEGARDER
+		tools.add(sauvegarder);
+		tools.addSeparator();// TODO - add functionality! POUR SAUVEGARDER
 		tools.add(precedent); // TODO - add functionality!$
 		tools.add(new JButton("SUIV")); // TODO - add functionality!
-		tools.addSeparator(); // SEPARER LES BOUTONS
+		tools.addSeparator();
 		tools.add(abandon); // TODO - add functionality!
+		tools.addSeparator(); // SEPARER LES BOUTONS
 		tools.add(play);
 		tools.add(stop);
 		tools.addSeparator(); // AUTRE SEPARATION
