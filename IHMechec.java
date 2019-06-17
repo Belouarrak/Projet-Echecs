@@ -252,6 +252,7 @@ public class IHMechec extends JPanel {
 			}
 		} else {
 			// vérifier si Pat
+			retablicCouleurCases();
 			if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier()) == true) {
 				this.finpartie = true;
 				JOptionPane.showMessageDialog(this, "Vous avez atteint un Pat, personne ne gagne.");
