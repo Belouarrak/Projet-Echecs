@@ -302,10 +302,6 @@ public class Partie{
   public boolean move(Case caseDep, Case caseAr){
     if (this.legalMove(this.joueurCourant, caseDep, caseAr, this.echiquier)==true && this.moveMetEchec(this.joueurCourant, caseDep, caseAr)==false){
       this.echiquier.bougerPiece(caseDep, caseAr);
-      if (this.promouvoirPion(this.echiquier.getCase(caseAr.getX(), caseAr.getY()))){
-        //System.out.println(this.getEchiquier().toString());
-      }
-      this.changerJoueurCourant();
       return true;
     }
     return false;
@@ -313,49 +309,13 @@ public class Partie{
   public boolean promouvoirPion(Case box){
     if (box.estOccupee() && box.getPiece().getColor()==this.joueurCourant.getPlayerColor() && box.getPiece() instanceof Pion){
       if(this.joueurCourant==this.blanc && box.getX()==7){
-        System.out.println("Votre pion a atteint "+box.getStringCase()+". Veuillez le promouvoir.");
-        this.choisirPromotion(0, box);
         return true;
       }
       else if (this.joueurCourant==this.noir && box.getX()==0){
-        System.out.println("Votre pion a atteint "+box.getStringCase()+". Veuillez le promouvoir.");
-        this.choisirPromotion(1, box);
         return true;
       }
     }
     return false;
-  }
-  public void choisirPromotion(int color, Case box){
-    System.out.println("Dame: 'D', Fou: 'F', Tour: 'T', Cavalier: 'C'.\nEntrer la nature de la nouvelle pièce.");
-    String nature = "";
-    boolean prom = false;
-    while(!prom){
-      nature=this.input.nextLine().trim();
-      if (nature.equals("D")){
-        Dame piece = new Dame(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-      else if (nature.equals("F")){
-        Fou piece = new Fou(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-      else if (nature.equals("T")){
-        Tour piece = new Tour(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-      else if (nature.equals("C")){
-        Cavalier piece = new Cavalier(color);
-        box.enleverPiece();
-        box.occuperCase(piece);
-        prom = true;
-      }
-    }
   }
   public void lancerPartie(){
     boolean finpartie = false;
