@@ -11,13 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.print.attribute.standard.Media;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -39,8 +36,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-
-	public class ChessGUI extends JPanel {
+public class ChessGUI extends JPanel {
 
 	private final JPanel gui = new JPanel(new BorderLayout(3, 3)); // GUI
 	private JButton[][] chessBoardSquares = new JButton[8][8]; // 8X8 Jbutton
@@ -49,7 +45,7 @@ import javax.swing.border.LineBorder;
 	private JLabel message = new JLabel("Appuyez sur Nouvelle Partie !"); // JLABEL POUR ECHIQUIER
 	private static final String COLS = "ABCDEFGH"; // REPRESENTATION DE L'INTERFACE
 	public static final int QUEEN = 0, KING = 1, ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5; // PIECES VARIABLES
-	public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK };// TABLEAU DE PIECES
+	public static final int[] STARTING_ROW = { ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK };// TABLEAU DE																								// PIECES
 	public static final int BLACK = 0, WHITE = 1; // VALEURS DES PIECES
 	private JButton sauvegarder = new JButton("SAUVEGARDER");
 	private JButton precedent = new JButton("PREC");
@@ -69,7 +65,7 @@ import javax.swing.border.LineBorder;
 	ChessGUI() {
 		initializeGui();
 		this.partie = null;
-		//this.setupBoard(partie.getEchiquier());
+		// this.setupBoard(partie.getEchiquier());
 	}
 
 	public final void initializeGui() {
@@ -80,26 +76,26 @@ import javax.swing.border.LineBorder;
 		JToolBar tools = new JToolBar(); // Toolbar en haut
 		tools.setFloatable(true); // Pour pouvoir déplacer le JToolbar en haut
 		gui.add(tools, BorderLayout.NORTH); // TOOLBAR AU NORD
-		//JPanel info = new JPanel(new GridLayout(10, 1));
+		// JPanel info = new JPanel(new GridLayout(10, 1));
 		String i = "FALSE";
 		JLabel echec = new JLabel("ECHEC =   " + i);
 		JLabel echecmat = new JLabel("ECHEC ET MAT =  " + i);
 		this.panelHistorique = new JTextArea();
 		this.panelHistorique.setEditable(false);
 		Border blackline = BorderFactory.createLineBorder(Color.black);
-		this.panelHistorique.setMaximumSize(new Dimension(170,700));
-		this.panelHistorique.setPreferredSize(new Dimension(170,700));
+		this.panelHistorique.setMaximumSize(new Dimension(170, 700));
+		this.panelHistorique.setPreferredSize(new Dimension(170, 700));
 		this.panelHistorique.setBorder(blackline);
 		this.panelHistorique.setLineWrap(true);
 		this.panelHistorique.setBackground(new Color(213, 205, 193));
 		Font font = new Font("Arial", Font.BOLD, 14);
-    this.panelHistorique.setFont(font);
+		this.panelHistorique.setFont(font);
 		JScrollPane scrollPane = new JScrollPane(this.panelHistorique);
 		echec.setVerticalAlignment(JLabel.TOP);
 		echecmat.setVerticalAlignment(JLabel.TOP);
-		//info.add(echec, BorderLayout.EAST);
-		//info.add(echecmat, BorderLayout.EAST);
-		//gui.add(info, BorderLayout.EAST);
+		// info.add(echec, BorderLayout.EAST);
+		// info.add(echecmat, BorderLayout.EAST);
+		// gui.add(info, BorderLayout.EAST);
 		gui.add(scrollPane, BorderLayout.WEST);
 		this.nouvellePartie.addActionListener(new NouvellePartieListener());
 		tools.add(nouvellePartie);
@@ -117,7 +113,7 @@ import javax.swing.border.LineBorder;
 		creerPanelEchiquier();
 		addChessListener();
 		addUndoListener();
-		try {
+		/*try {
 			SimpleAudioPlayer();
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
@@ -128,45 +124,45 @@ import javax.swing.border.LineBorder;
 		} catch (LineUnavailableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public final JComponent getGui() {
 		return gui;
 	}
- 	private void creerPanelEchiquier(){
-			this.echiquier = new JPanel(new GridLayout(0, 9)) {
+
+	private void creerPanelEchiquier() {
+		this.echiquier = new JPanel(new GridLayout(0, 9)) {
 			private static final long serialVersionUID = 1L;
+
 			/**
 			 * Override the preferred size to return the largest it can, in a square shape.
 			 * Must (must, must) be added to a GridBagLayout as the only component (it uses
 			 * the parent as a guide to size) with no GridBagConstaint (so it is centered).
 			 */
-				@Override
-				public final Dimension getPreferredSize() {
-					Dimension d = super.getPreferredSize(); // Encapsulation de la taille de l'échiquier
-					Dimension prefSize = null;
-					Component c = getParent(); // ON RECUPERE LA TAILLE DU PARENT
-					if (c == null) {
-						prefSize = new Dimension((int) d.getWidth(), (int) d.getHeight());
-					} else if (c != null && c.getWidth() > d.getWidth() && c.getHeight() > d.getHeight()) {
-						prefSize = c.getSize();
-					} else {
-						prefSize = d;
-					}
-					int w = (int) prefSize.getWidth();
-					int h = (int) prefSize.getHeight();
-					// the smaller of the two sizes
-					int s = (w > h ? h : w);
-					return new Dimension(s, s);
+			@Override
+			public final Dimension getPreferredSize() {
+				Dimension d = super.getPreferredSize(); // Encapsulation de la taille de l'échiquier
+				Dimension prefSize = null;
+				Component c = getParent(); // ON RECUPERE LA TAILLE DU PARENT
+				if (c == null) {
+					prefSize = new Dimension((int) d.getWidth(), (int) d.getHeight());
+				} else if (c != null && c.getWidth() > d.getWidth() && c.getHeight() > d.getHeight()) {
+					prefSize = c.getSize();
+				} else {
+					prefSize = d;
 				}
-			};
+				int w = (int) prefSize.getWidth();
+				int h = (int) prefSize.getHeight();
+				int s = (w > h ? h : w);
+				return new Dimension(s, s);
+			}
+		};
 		echiquier.setBorder(new CompoundBorder(new EmptyBorder(50, 50, 50, 50), new LineBorder(Color.BLACK)));
-		// Set the BG to be ochre
-		Color ochre = new Color(240, 240, 240);
-		echiquier.setBackground(ochre);
+		Color white = new Color(240, 240, 240);
+		echiquier.setBackground(white);
 		this.boardConstrain = new JPanel(new GridBagLayout());
-		this.boardConstrain.setBackground(ochre);
+		this.boardConstrain.setBackground(white);
 		this.boardConstrain.add(echiquier);
 		gui.add(this.boardConstrain);
 
@@ -176,8 +172,6 @@ import javax.swing.border.LineBorder;
 			for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
 				JButton b = new JButton();
 				b.setMargin(buttonMargin);
-				// our chess pieces are 64x64 px in size, so we'll
-				// 'fill this in' using a transparent icon..
 				ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
 				b.setIcon(icon);
 				if ((jj % 2 == 1 && ii % 2 == 1)
@@ -211,6 +205,7 @@ import javax.swing.border.LineBorder;
 			}
 		}
 	}
+
 	private final void createImages() {
 		try {
 			BufferedImage bi = ImageIO.read(getClass().getResource("./img/pieces.png"));
@@ -224,131 +219,120 @@ import javax.swing.border.LineBorder;
 			System.exit(1);
 		}
 	}
-	public String toStringHistorique(){
+
+	public String toStringHistorique() {
 		String historique = "";
-		for (int i=0; i<this.historiqueMoves.size(); i++){
-			historique+=this.historiqueMoves.get(i)+"\n";
+		for (int i = 0; i < this.historiqueMoves.size(); i++) {
+			historique += this.historiqueMoves.get(i) + "\n";
 		}
 		return historique;
 	}
-	public void newGame(){
+
+	public void newGame() {
 		this.partie = new Partie();
 		JOptionPane jOp = new JOptionPane();
-    String nomblanc = jOp.showInputDialog("A qui sont les pieces blanches?");
-		this.partie.setJoueurBlanc(new Joueur(nomblanc,0));
+		String nomblanc = jOp.showInputDialog("A qui sont les pieces blanches?");
+		this.partie.setJoueurBlanc(new Joueur(nomblanc, 0));
 		String nomnoir = jOp.showInputDialog("A qui sont les pieces noires?");
-		this.partie.setJoueurNoir(new Joueur(nomnoir,1));
+		this.partie.setJoueurNoir(new Joueur(nomnoir, 1));
 		this.partie.setJoueurCourant();
-		this.finpartie=false;
+		this.finpartie = false;
 		this.historiqueMoves = new ArrayList<String>();
 		this.panelHistorique.setText(toStringHistorique());
 		setupBoard(this.partie.getEchiquier());
 	}
-	//public void playMove()
+	// public void playMove()
 
-	public void checkPartie(){
-		this.message.setText("C'est au tour de "+this.partie.getJoueurCourant().getNom()+" de jouer.");
-	  //vérifier si le joueur est en échec
+	public void checkPartie() {
+		this.message.setText("C'est au tour de " + this.partie.getJoueurCourant().getNom() + " de jouer.");
+		// vérifier si le joueur est en échec
 		JOptionPane jop = new JOptionPane();
-	  if (this.partie.estEnEchec(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
-	    //vérifier si le joueur est en échecs et mat
-	    if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
+		if (this.partie.estEnEchec(this.partie.getJoueurCourant(), this.partie.getEchiquier()) == true) {
+			// vérifier si le joueur est en échecs et mat
+			if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier()) == true) {
 				this.finpartie = true;
-	      this.partie.setJoueurGagnant(this.partie.joueurOppose(this.partie.getJoueurCourant()));
-				jop.showMessageDialog(this, "Partie terminee. Le gagnant de la partie est "+this.partie.getJoueurGagnant().getNom()+"!!!");
-	    }
-	  }
-	  else{
-	    //vérifier si Pat
-	    if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier())==true){
+				this.partie.setJoueurGagnant(this.partie.joueurOppose(this.partie.getJoueurCourant()));
+				jop.showMessageDialog(this, "Partie terminee. Le gagnant de la partie est "
+						+ this.partie.getJoueurGagnant().getNom() + "!!!");
+			}
+		} else {
+			// vérifier si Pat
+			if (this.partie.noLegalMovePossible(this.partie.getJoueurCourant(), this.partie.getEchiquier()) == true) {
 				this.finpartie = true;
-	      jop.showMessageDialog(this, "Vous avez atteint un Pat, personne ne gagne.");
-	    }
-	  }
+				jop.showMessageDialog(this, "Vous avez atteint un Pat, personne ne gagne.");
+			}
+		}
 	}
-	
 
-			public void SimpleAudioPlayer() 
-			        throws UnsupportedAudioFileException, 
-			        IOException, LineUnavailableException  
-			    { 
-				    // current status of clip 
-				    AudioInputStream audioInputStream; 
-				    String filePath = "./sound/TT.wav"; 
-			        // create AudioInputStream object 
-			        audioInputStream =  AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());   
-			        // create clip reference 
-			        clip = AudioSystem.getClip(); 
-			        // open audioInputStream to the clip 
-			        clip.open(audioInputStream); 
-			          
-			        clip.loop(Clip.LOOP_CONTINUOUSLY); 
-			        clip.start();
-			    } 
-	      
-	
+	public void SimpleAudioPlayer() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		// current status of clip
+		AudioInputStream audioInputStream;
+		String filePath = "./sound/TT.wav";
+		// create AudioInputStream object
+		audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+		// create clip reference
+		clip = AudioSystem.getClip();
+		// open audioInputStream to the clip
+		clip.open(audioInputStream);
+
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		clip.start();
+	}
 
 	public void setupBoard(Echiquier echiquier) {
-		if (this.partie!=null){
+		if (this.partie != null) {
 			// set up les pieces
-			for (int i = 0; i<8;i++) {
-				for(int j = 0; j<8; j++){
-					Case box = echiquier.getCase(Math.abs(j-7), i);
-					//set up les deux dames
-					if (box.estOccupee() && box.getPiece() instanceof Dame){
-						if (box.getPiece().getColor()==1){
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+					Case box = echiquier.getCase(Math.abs(j - 7), i);
+					// set up les deux dames
+					if (box.estOccupee() && box.getPiece() instanceof Dame) {
+						if (box.getPiece().getColor() == 1) {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KING]));
-						}
-						else{
+						} else {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KING]));
 						}
 					}
-					//set up les deux rois
-					else if (box.estOccupee() && box.getPiece() instanceof Roi){
-						if (box.getPiece().getColor()==1){
+					// set up les deux rois
+					else if (box.estOccupee() && box.getPiece() instanceof Roi) {
+						if (box.getPiece().getColor() == 1) {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][QUEEN]));
-						}
-						else{
+						} else {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][QUEEN]));
 						}
 					}
-					//set up les deux Cavaliers
-					else if (box.estOccupee() && box.getPiece() instanceof Cavalier){
-						if (box.getPiece().getColor()==1){
+					// set up les deux Cavaliers
+					else if (box.estOccupee() && box.getPiece() instanceof Cavalier) {
+						if (box.getPiece().getColor() == 1) {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][KNIGHT]));
-						}
-						else{
+						} else {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][KNIGHT]));
 						}
 					}
-					//set up les deux Fous
-					else if (box.estOccupee() && box.getPiece() instanceof Fou){
-						if (box.getPiece().getColor()==1){
+					// set up les deux Fous
+					else if (box.estOccupee() && box.getPiece() instanceof Fou) {
+						if (box.getPiece().getColor() == 1) {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][BISHOP]));
-						}
-						else{
+						} else {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][BISHOP]));
 						}
 					}
-					//set up les deux Tours
-					else if (box.estOccupee() && box.getPiece() instanceof Tour){
-						if (box.getPiece().getColor()==1){
+					// set up les deux Tours
+					else if (box.estOccupee() && box.getPiece() instanceof Tour) {
+						if (box.getPiece().getColor() == 1) {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][ROOK]));
-						}
-						else{
+						} else {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][ROOK]));
 						}
 					}
-					//set up les Pions
-					else if (box.estOccupee() && box.getPiece() instanceof Pion){
-						if (box.getPiece().getColor()==1){
+					// set up les Pions
+					else if (box.estOccupee() && box.getPiece() instanceof Pion) {
+						if (box.getPiece().getColor() == 1) {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[BLACK][PAWN]));
-						}
-						else{
+						} else {
 							chessBoardSquares[i][j].setIcon(new ImageIcon(chessPieceImages[WHITE][PAWN]));
 						}
-					}
-					else {
+					} else {
 						chessBoardSquares[i][j].setIcon(null);
 					}
 				}
@@ -359,12 +343,13 @@ import javax.swing.border.LineBorder;
 	public void addChessListener() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				chessBoardSquares[i][j].setActionCommand(Math.abs(j-7)+" "+ i);
+				chessBoardSquares[i][j].setActionCommand(Math.abs(j - 7) + " " + i);
 				chessBoardSquares[i][j].addActionListener(new ButtonCaseListener());
 			}
 		}
 	}
-	public void retablicCouleurCases(){
+
+	public void retablicCouleurCases() {
 		Color ochre = new Color(240, 240, 240);
 		this.echiquier.setBackground(ochre);
 		this.boardConstrain.setBackground(ochre);
@@ -386,39 +371,44 @@ import javax.swing.border.LineBorder;
 		}
 		setupBoard(partie.getEchiquier());
 	}
+
 	public void addUndoListener() {
+		charger.addActionListener(new UndoListener());
 		sauvegarder.addActionListener(new UndoListener());
 		precedent.addActionListener(new UndoListener());
 		stop.addActionListener(new UndoListener());
 		play.addActionListener(new UndoListener());
 	}
+
 //inner-class avec les Listener
-	class ButtonCaseListener implements ActionListener{
+	class ButtonCaseListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (finpartie==false){
-				//si aucune case n'est séléctionné on va séléctionner celle là et surligner la case sur le gui
-				if (caseMove[0]==null){
-					String coords = e.getActionCommand().replaceAll("\\s+","");
+			if (finpartie == false) {
+				// si aucune case n'est séléctionné on va séléctionner celle là et surligner la
+				// case sur le gui
+				if (caseMove[0] == null) {
+					String coords = e.getActionCommand().replaceAll("\\s+", "");
 					int x = Integer.parseInt(Character.toString(coords.charAt(0)));
 					int y = Integer.parseInt(Character.toString(coords.charAt(1)));
-					if (partie.getEchiquier().getCase(x,y).estOccupee() && partie.getEchiquier().getCase(x,y).getPiece().getColor()==partie.getJoueurCourant().getPlayerColor()){
+					if (partie.getEchiquier().getCase(x, y).estOccupee() && partie.getEchiquier().getCase(x, y)
+							.getPiece().getColor() == partie.getJoueurCourant().getPlayerColor()) {
 						caseMove = new Case[2];
-						caseMove[0] = partie.getEchiquier().getCase(x,y);
-						chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
-						for(int i=0;i<8;i++){
-							for(int j=0;j<8;j++){
-								if (partie.legalMove(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j), partie.getEchiquier())){
-									if(partie.moveMetEchec(partie.getJoueurCourant(), caseMove[0], partie.getEchiquier().getCase(i,j))){
-										chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.RED);
-									}
-									else{
-										if(partie.getEchiquier().getCase(i,j).estOccupee()){
-											chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.GREEN);
-										}
-										else{
-											chessBoardSquares[j][Math.abs(i-7)].setBackground(Color.BLUE);
+						caseMove[0] = partie.getEchiquier().getCase(x, y);
+						chessBoardSquares[y][Math.abs(x - 7)].setBackground(Color.BLUE);
+						for (int i = 0; i < 8; i++) {
+							for (int j = 0; j < 8; j++) {
+								if (partie.legalMove(partie.getJoueurCourant(), caseMove[0],
+										partie.getEchiquier().getCase(i, j), partie.getEchiquier())) {
+									if (partie.moveMetEchec(partie.getJoueurCourant(), caseMove[0],
+											partie.getEchiquier().getCase(i, j))) {
+										chessBoardSquares[j][Math.abs(i - 7)].setBackground(Color.RED);
+									} else {
+										if (partie.getEchiquier().getCase(i, j).estOccupee()) {
+											chessBoardSquares[j][Math.abs(i - 7)].setBackground(Color.GREEN);
+										} else {
+											chessBoardSquares[j][Math.abs(i - 7)].setBackground(Color.BLUE);
 										}
 									}
 								}
@@ -426,60 +416,68 @@ import javax.swing.border.LineBorder;
 						}
 					}
 				}
-				//si une case est déja sélectionnée on va sélectionner celle là aussi si ce n'est pas la même que la première, la surligner puis essayer le mouvement
-				else if (caseMove[1]==null ){
-					String coords = e.getActionCommand().replaceAll("\\s+","");
+				// si une case est déja sélectionnée on va sélectionner celle là aussi si ce
+				// n'est pas la même que la première, la surligner puis essayer le mouvement
+				else if (caseMove[1] == null) {
+					String coords = e.getActionCommand().replaceAll("\\s+", "");
 					int x = Integer.parseInt(Character.toString(coords.charAt(0)));
 					int y = Integer.parseInt(Character.toString(coords.charAt(1)));
-					if (caseMove[0]!=partie.getEchiquier().getCase(x,y)){
-						chessBoardSquares[y][Math.abs(x-7)].setBackground(Color.BLUE);
-						caseMove[1] = partie.getEchiquier().getCase(x,y);
-						if (partie.move(caseMove[0], caseMove[1])){
-							historiqueMoves.add(new String(caseMove[0].getStringCase()+caseMove[1].getStringCase()));
+					if (caseMove[0] != partie.getEchiquier().getCase(x, y)) {
+						chessBoardSquares[y][Math.abs(x - 7)].setBackground(Color.BLUE);
+						caseMove[1] = partie.getEchiquier().getCase(x, y);
+						if (partie.move(caseMove[0], caseMove[1])) {
+							historiqueMoves.add(new String(caseMove[0].getStringCase() + caseMove[1].getStringCase()));
 							checkPartie();
 						}
-						caseMove=new Case[2];
+						caseMove = new Case[2];
 						setupBoard(partie.getEchiquier());
 						retablicCouleurCases();
 						panelHistorique.setText(toStringHistorique());
-					}
-					else{
-						caseMove=new Case[2];
+					} else {
+						caseMove = new Case[2];
 						retablicCouleurCases();
 					}
-				}
-				else {
-					caseMove=new Case[2];
+				} else {
+					caseMove = new Case[2];
 					retablicCouleurCases();
 				}
 			}
 		}
 	}
-	class NouvellePartieListener implements ActionListener{ // NOUVEL ACTION LISTENER
+
+	class NouvellePartieListener implements ActionListener { // NOUVEL ACTION LISTENER
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//boolean finpartie = false;
+			// boolean finpartie = false;
 			newGame();
- 			// A VOIR
+			// A VOIR
 		}
 
 	};
-	class UndoListener implements ActionListener
-	{
+
+	class UndoListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand() == "STOP") {
-					clip.stop();
+				clip.stop();
 			}
 			if (e.getActionCommand() == "PLAY") {
 				System.out.println(e.getActionCommand());
 				clip.start();
 			}
-			//System.out.println(e.getActionCommand());
-			//partie.undoGame();
-			//gui.undoGame();
+			if (e.getActionCommand() == "CHARGER") {
+				try {
+					partie.chargerMoves("./Fichiertxt.txt");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			// System.out.println(e.getActionCommand());
+			// partie.undoGame();
+			// gui.undoGame();
 		}
 	}
 }

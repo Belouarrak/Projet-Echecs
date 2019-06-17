@@ -172,21 +172,44 @@ public class Partie{
     cases[1] = this.echiquier.getCase(x2,y2);
     return cases;
   }
+  
+  /*
+   * public void ChargerPartie() throws Exception
+  {
+	  FileReader fichierRead = new FileReader("Fichiertxt.txt"); // Lire le fichier
+      BufferedReader ReadFileBuffer = new BufferedReader(fichierRead); // Streaming chain, convention
+      String ligne = "1";
+
+  
+	while ((ligne = ReadFileBuffer.readLine()) != null)
+      {
+			// read next line
+			coords = ligne;
+			System.out.println(ligne);
+			entrerCoords(coords);
+      } 
+      ReadFileBuffer.close();
+   }
+   */
+  
   public void chargerMoves(String file) throws Exception{
     try{
+    	
       BufferedReader ReadFileBuffer = new BufferedReader(new FileReader(file)); // Streaming chain, convention
-      String ligne = ReadFileBuffer.readLine().toLowerCase().replaceAll("\\s+","");
-      while (ligne!= null){
-        // read next line
+      String ligne = "1";
+      while ((ligne = ReadFileBuffer.readLine()) != null){
+    	  ligne = ligne.toLowerCase().trim();
+    	  // read next line
         Case[] cases = this.entrerCoords(ligne);
         this.echiquier.bougerPiece(cases[0], cases[1]);
         this.changerJoueurCourant();
-        ligne = ReadFileBuffer.readLine().toLowerCase().replaceAll("\\s+","");
+        System.out.println(ligne);
       }
       ReadFileBuffer.close();
     }
-    catch(Exception e){System.out.println(e);}
+    catch(Exception e){System.out.println(e + " mdr");}
    }
+  
   //legalMove a un nom un peu redondant à mouvementPossible, mais cette méthode ci est plus élargie, et connait le contexte de la partie. Elle va elle même,
   //après avoir verifié que plusieurs configurations de base sont respectées, utiliser mouvementPossible
   public boolean legalMove(Joueur currentPlayer, Case caseDep, Case caseAr, Echiquier board){
