@@ -556,6 +556,7 @@ public class ChessGUI extends JPanel {
 			if (e.getActionCommand() == "CHARGER") {
 				try {
 					partie.chargerMoves("./Fichiertxt.txt");
+					setupBoard(partie.getEchiquier());
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
