@@ -1,8 +1,6 @@
-import java.io.*;
-import java.util.*;
+package Main;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 public class ChessMaster extends JFrame{
   /**
