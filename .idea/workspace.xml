@@ -19,38 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c136b6f-8f71-4e41-9db6-8a80c875dcb9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Projet-Echecs.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Projet-Echecs.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="0c136b6f-8f71-4e41-9db6-8a80c875dcb9" name="Default Changelist" comment="Change file structure">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Case.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cavalier.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessMaster.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main/ChessMaster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diagramme de class.ucls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diagramme de class2.ucls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Echiquier.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fichiertxt.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fou.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IHMechec.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Joueur.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Partie.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Piece.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Promotion.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Roi.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test checkmate.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test stalemate.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testcheckmate.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tour.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lesalam.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test2.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,8 +92,25 @@
       <updated>1617355750584</updated>
       <workItem from="1617355809850" duration="73000" />
       <workItem from="1617355936042" duration="20000" />
-      <workItem from="1617356039176" duration="2069000" />
+      <workItem from="1617356039176" duration="2498000" />
+      <workItem from="1619164494246" duration="54000" />
+      <workItem from="1619327368256" duration="163000" />
     </task>
+    <task id="LOCAL-00001" summary="Change file structure">
+      <created>1617358214813</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1617358214813</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Change file structure">
+      <created>1617358296756</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1617358296756</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -139,6 +126,11 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Change file structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change file structure" />
   </component>
   <component name="WindowStateProjectService">
     <state x="440" y="99" key="#Project_Structure" timestamp="1617356094372">
@@ -157,25 +149,29 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="740" y="280" key="FileChooserDialogImpl/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617355868040" />
-    <state width="1877" height="285" key="GridCell.Tab.0.bottom" timestamp="1617357653958">
+    <state width="1877" height="285" key="GridCell.Tab.0.bottom" timestamp="1619327537451">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617357653958" />
-    <state width="1877" height="285" key="GridCell.Tab.0.center" timestamp="1617357653958">
+    <state width="1877" height="285" key="GridCell.Tab.0.bottom/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1619327537451" />
+    <state width="1877" height="285" key="GridCell.Tab.0.center" timestamp="1619327537451">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="285" key="GridCell.Tab.0.center/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617357653958" />
-    <state width="1877" height="285" key="GridCell.Tab.0.left" timestamp="1617357653958">
+    <state width="1877" height="285" key="GridCell.Tab.0.center/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1619327537451" />
+    <state width="1877" height="285" key="GridCell.Tab.0.left" timestamp="1619327537451">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="285" key="GridCell.Tab.0.left/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617357653958" />
-    <state width="1877" height="285" key="GridCell.Tab.0.right" timestamp="1617357653958">
+    <state width="1877" height="285" key="GridCell.Tab.0.left/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1619327537451" />
+    <state width="1877" height="285" key="GridCell.Tab.0.right" timestamp="1619327537451">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="285" key="GridCell.Tab.0.right/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617357653958" />
+    <state width="1877" height="285" key="GridCell.Tab.0.right/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1619327537451" />
     <state x="440" y="99" key="SettingsEditor" timestamp="1617356243676">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="440" y="99" key="SettingsEditor/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617356243676" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1617358320017">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/-1920.0.1920.1050@0.0.1920.1050" timestamp="1617358320017" />
   </component>
 </project>
